@@ -6,12 +6,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
-    <TextView
-        android:text="Sign Up Activity"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@drawable/toolbar"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/logo_transparent"
+                android:layout_margin="3sp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/app_name"
+                android:textColor="@color/slate_blue"
+                android:textStyle="bold"
+                android:fontFamily="casual"
+                android:textSize="24sp"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+        <TextView
+            android:text="@string/registration"
+            android:textColor="@color/dark_green"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/profile_name"
+            android:hint="@string/name_hint"
+            style="@style/Theme.EditText" />
+        <EditText
+            android:id="@+id/phone_number"
+            android:hint="@string/phone_hint"
+            android:inputType="phone"
+            style="@style/Theme.EditText" />
+        <EditText
+            android:id="@+id/email_address"
+            android:hint="@string/email_hint"
+            style="@style/Theme.EditText" />
+        <EditText
+            android:id="@+id/password"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            style="@style/Theme.EditText" />
+        <Button
+            android:text="@string/sign_up_button"
+            android:layout_marginTop="20dp"
+            style="@style/Theme.Button" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

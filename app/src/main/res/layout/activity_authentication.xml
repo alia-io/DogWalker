@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toTopOf="@id/logo_image" />
     <ImageView
         android:id="@+id/logo_image"
-        android:src="@drawable/splash_screen_logo"
+        android:src="@drawable/logo"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintLeft_toLeftOf="parent"
