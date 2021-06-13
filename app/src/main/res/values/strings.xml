@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">DogWalker</string>
+    <string name="app_name">Dog Walker</string>
+    <string name="welcome">Welcome to Dog Walker!</string>
+
+    <!--Art Credit-->
+    <string name="splash_screen_logo"><a href="https://www.freepik.com/vectors/baby">Baby vector created by catalyststuff - www.freepik.com</a></string>
 </resources>
