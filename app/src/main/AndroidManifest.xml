@@ -16,9 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DogWalker">
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".SignUpActivity" />
+        android:theme="@style/Activity.DogWalker">
+        <activity android:name=".SignUpLoginActivity" />
         <activity android:name=".HomeActivity" />
 
         <meta-data
@@ -27,8 +26,8 @@
 
         <activity android:name=".ArtCreditActivity" />
         <activity
-            android:name=".AuthenticationActivity"
-            android:theme="@style/Theme.Splash">
+            android:name=".SplashActivity"
+            android:theme="@style/Activity.DogWalker.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

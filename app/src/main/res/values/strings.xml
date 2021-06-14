@@ -2,12 +2,25 @@
     <string name="app_name">Dog Walker</string>
     <string name="welcome">Welcome to Dog Walker!</string>
 
+    <!--TextView Text-->
     <string name="registration">Register a New Account</string>
+    <string name="login">Login to Your Account</string>
+    <string name="go_to_login">Already have an account?</string>
+
+    <!--Button Text-->
+    <string name="sign_up_button">Sign Up</string>
+    <string name="login_button">Login</string>
+
+    <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>
     <string name="password_hint">Password</string>
     <string name="name_hint">Profile Nickname</string>
     <string name="phone_hint">Phone Number</string>
-    <string name="sign_up_button">Sign Up</string>
+
+    <!--Toolbar Menu Action Text-->
+    <string name="email_verification">Resend Verification Email</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="new_account">Create New Account</string>
 
     <!--Art Credit-->
     <string name="splash_screen_logo"><a href="https://www.freepik.com/vectors/baby">Baby vector created by catalyststuff - www.freepik.com</a></string>
