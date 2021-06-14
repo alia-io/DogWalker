@@ -3,11 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_verification"
         android:title="@string/email_verification"
+        android:visible="false"
         app:showAsAction="never" />
     <item android:id="@+id/action_password"
         android:title="@string/reset_password"
+        android:visible="false"
         app:showAsAction="never" />
     <item android:id="@+id/action_new_account"
         android:title="@string/new_account"
+        android:visible="false"
         app:showAsAction="never" />
 </menu>

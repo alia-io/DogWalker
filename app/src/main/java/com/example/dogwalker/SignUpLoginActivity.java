@@ -2,6 +2,7 @@ package com.example.dogwalker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,14 +20,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignUpLoginActivity extends AppCompatActivity {
+public class SignUpLoginActivity extends AppCompatActivity implements AuthActionDialogListener {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private TextView instructionText;
     private LinearLayout bottomLayout;
     private TextInputLayout profileNameLayout, phoneNumberLayout;
-    private EditText profileName, phoneNumber, emailAddress, password;
+    private EditText profileName, phoneNumber, emailAddress, passwordInput;
     private Button signUpLoginButton;
     private Menu actionBarMenu;
     private boolean loginMode;
@@ -49,7 +50,7 @@ public class SignUpLoginActivity extends AppCompatActivity {
         profileName = findViewById(R.id.profile_name);
         phoneNumber = findViewById(R.id.phone_number);
         emailAddress = findViewById(R.id.email_address);
-        password = findViewById(R.id.password);
+        passwordInput = findViewById(R.id.password);
         signUpLoginButton = findViewById(R.id.sign_up_login_button);
     }
 
@@ -69,7 +70,7 @@ public class SignUpLoginActivity extends AppCompatActivity {
         profileName.setText("");
         phoneNumber.setText("");
         emailAddress.setText("");
-        password.setText("");
+        passwordInput.setText("");
         profileNameLayout.setVisibility(View.VISIBLE);
         phoneNumberLayout.setVisibility(View.VISIBLE);
         bottomLayout.setVisibility(View.VISIBLE);
@@ -97,12 +98,12 @@ public class SignUpLoginActivity extends AppCompatActivity {
 
     private void signUp() {
         if (profileName.getText().length() <= 0 || phoneNumber.getText().length() <= 0
-                || emailAddress.getText().length() <= 0 || password.getText().length() <= 0) {
+                || emailAddress.getText().length() <= 0 || passwordInput.getText().length() <= 0) {
             Toast.makeText(this, "Please fill out all fields to create an account.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(emailAddress.getText().toString(), password.getText().toString())
+        mAuth.createUserWithEmailAndPassword(emailAddress.getText().toString(), passwordInput.getText().toString())
                 .addOnSuccessListener(authResult -> {
                     currentUser = authResult.getUser();
                     assert currentUser != null;
@@ -133,7 +134,7 @@ public class SignUpLoginActivity extends AppCompatActivity {
     private void login() {
 
         String email = emailAddress.getText().toString();
-        String pass = password.getText().toString();
+        String pass = passwordInput.getText().toString();
 
         if (email.equals("") || pass.equals("")) {
             Toast.makeText(this, "Your email or password is incorrect.", Toast.LENGTH_SHORT).show();
@@ -145,7 +146,9 @@ public class SignUpLoginActivity extends AppCompatActivity {
                     currentUser = authResult.getUser();
                     assert currentUser != null;
                     if (currentUser.isEmailVerified()) {
-                        // TODO: take to profile edit activity with special extra signaling that this is their first login
+                        Intent intent = new Intent(SignUpLoginActivity.this, SplashActivity.class);
+                        intent.putExtra("from_login", true);
+                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(SignUpLoginActivity.this, "Please verify your email address to login.", Toast.LENGTH_SHORT).show();
@@ -164,10 +167,12 @@ public class SignUpLoginActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case resendVerificationActionId:
-                resendVerification();
+                AuthActionFragment.newInstance(R.layout.fragment_verify_email, "verify_email", emailAddress.getText().toString())
+                        .show(getSupportFragmentManager(), "verify_email");
                 return true;
             case resetPasswordActionId:
-                resetPassword();
+                AuthActionFragment.newInstance(R.layout.fragment_reset_password, "reset_password", emailAddress.getText().toString())
+                        .show(getSupportFragmentManager(), "reset_password");
                 return true;
             case newAccountActionId:
                 setUIToSignUp();
@@ -177,47 +182,48 @@ public class SignUpLoginActivity extends AppCompatActivity {
         }
     }
 
-    private void resendVerification() {
+    @Override
+    public void onVerifyEmailAttempt(AuthActionFragment fragment, String email, String password) {
 
-        /*if (currentUser == null) {
-            // TODO: have them enter email & password in Popup
-            Toast.makeText(this, "Current user is null", Toast.LENGTH_SHORT).show();
+
+        if (email.equals("") || password.equals("")) {
+            Toast.makeText(this, "Please enter your email address and password.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        currentUser.sendEmailVerification()
-                .addOnSuccessListener(aVoid ->
-                        Toast.makeText(SignUpLoginActivity.this, "Verification email sent! Please verify your email address to login.", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-         */
+        if (currentUser != null && currentUser.getEmail().equals(email)) {
+            currentUser.sendEmailVerification()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(SignUpLoginActivity.this, "Verification email sent!", Toast.LENGTH_SHORT).show();
+                        fragment.dismiss();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnSuccessListener(authResult -> {
+                        Toast.makeText(SignUpLoginActivity.this, "Verification email sent!", Toast.LENGTH_SHORT).show();
+                        fragment.dismiss();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(SignUpLoginActivity.this, "Your email or password is incorrect.", Toast.LENGTH_SHORT).show());
+        }
     }
 
-    private void resetPassword() {
+    @Override
+    public void onResetPasswordAttempt(AuthActionFragment fragment, String email) {
 
-        /*String email = emailAddress.getText().toString();
-
-        if (currentUser == null) {
-            if (email.equals("")) {
-                // TODO: have them enter email & password in Popup
-            } else {
-                mAuth.sendPasswordResetEmail(email)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(SignUpLoginActivity.this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        } else {
-
+        if (email.equals("")) {
+            Toast.makeText(this, "Please enter your email address.", Toast.LENGTH_SHORT).show();
+            return;
         }
-         */
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(SignUpLoginActivity.this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
+                    fragment.dismiss();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

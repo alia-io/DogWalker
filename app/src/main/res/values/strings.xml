@@ -1,15 +1,29 @@
 <resources>
-    <string name="app_name">Dog Walker</string>
-    <string name="welcome">Welcome to Dog Walker!</string>
-
     <!--TextView Text-->
+    <string name="app_name">Dog Walker</string>
+    <string name="welcome_1">Putting on a raincoat…</string>
+    <string name="welcome_2">Barking at squirrels…</string>
+    <string name="welcome_3">Sniffing a tree…</string>
+    <string name="welcome_4">Getting a belly rub…</string>
+    <string name="welcome_5">Drinking from the hose…</string>
+    <string name="welcome_6">Looking for the leash…</string>
+    <string name="welcome_7">Burying a bone…</string>
+    <string name="welcome_8">Chasing seagulls…</string>
+    <string name="welcome_9">Learning a trick…</string>
+    <string name="welcome_10">Playing fetch…</string>
     <string name="registration">Register a New Account</string>
     <string name="login">Login to Your Account</string>
     <string name="go_to_login">Already have an account?</string>
+    <string name="verify_email_text">Resend Verification Email</string>
+    <string name="reset_password_text">Send Password Reset Email</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
     <string name="login_button">Login</string>
+    <string name="send_email_button">Submit</string>
+
+    <string name="verify_email_button">Send Verification Email</string>
+    <string name="reset_password_button">Send Password Reset Email</string>
 
     <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>

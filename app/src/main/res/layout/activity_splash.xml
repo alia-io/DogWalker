@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
     <TextView
-        android:text="@string/welcome"
+        android:id="@+id/welcome_text"
         android:textSize="32sp"
         android:textStyle="italic"
         android:fontFamily="casual"
