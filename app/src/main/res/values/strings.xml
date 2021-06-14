@@ -37,5 +37,19 @@
     <string name="new_account">Create New Account</string>
 
     <!--Art Credit-->
+
+    <!--shibu_inu_reading-->
     <string name="splash_screen_logo"><a href="https://www.freepik.com/vectors/baby">Baby vector created by catalyststuff - www.freepik.com</a></string>
+
+    <!--dog_tongue-->
+    <!--<a href="https://www.freepik.com/free-photos-vectors/baby">Baby vector created by catalyststuff - www.freepik.com</a>-->
+
+    <!--shibu_inu_drinking-->
+    <!--<a href='https://www.freepik.com/free-photos-vectors/coffee'>Coffee vector created by catalyststuff - www.freepik.com</a>-->
+
+    <!--shibu_inu_astronaut-->
+    <!--<a href='https://www.freepik.com/free-photos-vectors/star'>Star vector created by catalyststuff - www.freepik.com</a>-->
+
+    <!--corgi_bone-->
+    <!--<a href='https://www.freepik.com/free-photos-vectors/dog'>Dog vector created by catalyststuff - www.freepik.com</a>-->
 </resources>

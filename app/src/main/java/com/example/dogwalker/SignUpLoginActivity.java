@@ -39,7 +39,6 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
         setSupportActionBar(findViewById(R.id.toolbar));
         loginMode = getIntent().getBooleanExtra("login_mode", false);
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
@@ -147,7 +146,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
                     assert currentUser != null;
                     if (currentUser.isEmailVerified()) {
                         Intent intent = new Intent(SignUpLoginActivity.this, SplashActivity.class);
-                        intent.putExtra("from_login", true);
+                        intent.putExtra("finish", true);
                         startActivity(intent);
                         finish();
                     } else {
