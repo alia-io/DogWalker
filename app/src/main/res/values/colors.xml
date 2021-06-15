@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="turquoise">#FF0F4C5C</color>
+    <color name="bright_green">#FF59CD90</color>
+    <color name="light_green_blue">#FF17C3B2</color>
+    <color name="bright_blue">#FF0BCAFE</color>
+    <color name="light_blue">#FF0091AD</color>
+    <color name="medium_blue">#FF0081A7</color>
+    <color name="dark_blue">#FF2E6F95</color>
+    <color name="indigo">#FF455E89</color>
+    <color name="violet">#FF5C4D7D</color>
+    <color name="reddish_purple">#FF723C70</color>
+    <color name="maroon">#FF892B64</color>
+    <color name="dark_pink">#FFA01A58</color>
+    <color name="pinkish_red">#FFB7094C</color>
+    <color name="orange_peach">#FFEE6352</color>
+    <color name="dark_peach">#FFFE6D73</color>
+    <color name="medium_peach">#FFF07167</color>
+    <color name="soft_peach">#FFF79D84</color>
+    <color name="light_peach">#FFFED9B7</color>
+    <color name="golden">#FFFFCB77</color>
+    <color name="dark_golden">#FFFFBC42</color>
+    <color name="off_white">#FFFDFCDC</color>
+    <color name="lilac_gray">#FFBFB6BB</color>
+    <color name="transparent">#00000000</color>
+
+
     <color name="dark_maroon">#FF412234</color>
     <color name="reddish_brown">#FF591F0A</color>
     <color name="light_rose">#FFECD8D5</color>
@@ -8,10 +34,7 @@
     <color name="pine_green">#FF397367</color>
     <color name="dark_green">#FF22443E</color>
     <color name="ice_blue">#FFC2F1FE</color>
-    <color name="light_blue">#FF0BCAFE</color>
     <color name="slate_blue">#FF2D3142</color>
-    <color name="lilac_gray">#FFBFB6BB</color>
-    <color name="transparent">#00000000</color>
 
     <color name="dark_teal">#FF018786</color>
     <color name="light_teal">#FF03DAC5</color>

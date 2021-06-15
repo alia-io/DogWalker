@@ -18,7 +18,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
-        <activity android:name=".SetUpProfile"
+        <activity android:name=".setupprofile.SetUpProfileActivity"
             android:theme="@style/Activity.DogWalker.Splash" />
         <activity android:name=".SignUpLoginActivity" />
         <activity android:name=".HomeActivity" />

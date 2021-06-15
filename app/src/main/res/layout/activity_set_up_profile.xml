@@ -5,40 +5,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetUpProfile">
-    <TextView
-        android:id="@+id/greeting"
-        android:textColor="@color/dark_green"
-        android:textStyle="bold"
-        android:textSize="28sp"
-        android:layout_marginVertical="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".setupprofile.SetUpProfileActivity">
     <ImageView
         android:id="@+id/left_arrow"
-        android:onClick="left"
-        tools:ignore="UsingOnClickInXml"
         android:src="@drawable/ic_left_arrow"
+        android:scaleType="fitXY"
         android:visibility="invisible"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/top_arrow_border"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_arrow_border"
+        app:layout_constraintRight_toRightOf="@id/left_arrow_border"
+        app:layout_constraintLeft_toLeftOf="@id/left_border" />
     <ImageView
         android:id="@+id/right_arrow"
-        android:onClick="right"
-        tools:ignore="UsingOnClickInXml"
         android:src="@drawable/ic_right_arrow"
+        android:scaleType="fitXY"
         android:visibility="invisible"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/top_arrow_border"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_arrow_border"
+        app:layout_constraintLeft_toLeftOf="@id/right_arrow_border"
+        app:layout_constraintRight_toRightOf="@id/right_border" />
+    <TextView
+        android:id="@+id/greeting_1"
+        android:text="@string/set_up_greeting_1"
+        android:fontFamily="casual"
+        android:textColor="@color/dark_green"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="@id/left_arrow_border"
+        app:layout_constraintRight_toRightOf="@id/right_arrow_border"
+        app:layout_constraintBottom_toBottomOf="@id/top_guide_1"
+        app:layout_constraintTop_toTopOf="@id/top_border" />
+    <TextView
+        android:id="@+id/greeting_2"
+        android:text="@string/set_up_greeting_2"
+        android:textColor="@color/dark_green"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="@id/left_arrow_border"
+        app:layout_constraintRight_toRightOf="@id/right_arrow_border"
+        app:layout_constraintBottom_toBottomOf="@id/top_guide_2"
+        app:layout_constraintTop_toTopOf="@id/top_guide_1" />
+    <FrameLayout
+        android:padding="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/button_border"
+        app:layout_constraintTop_toTopOf="@id/top_guide_2"
+        app:layout_constraintLeft_toLeftOf="@id/left_arrow_border"
+        app:layout_constraintRight_toRightOf="@id/right_arrow_border">
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/top_border" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.05" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/bottom_border" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.95" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/left_border" android:orientation="vertical"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.03" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/right_border" android:orientation="vertical"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.97" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/left_arrow_border" android:orientation="vertical"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.1" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/right_arrow_border" android:orientation="vertical"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.9" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/top_arrow_border" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.45" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/bottom_arrow_border" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.6" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/button_border" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.85" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/top_guide_1" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.2" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/top_guide_2" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.example.dogwalker;
 
+import com.example.dogwalker.setupprofile.SetUpProfileActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -77,7 +79,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (user.isDogOwner() || user.isDogWalker()) // Profile setup not needed
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 else // Profile setup needed
-                    startActivity(new Intent(SplashActivity.this, SetUpProfile.class));
+                    startActivity(new Intent(SplashActivity.this, SetUpProfileActivity.class));
                 if (finishActivity) finish();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }

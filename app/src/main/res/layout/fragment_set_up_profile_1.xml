@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/instruction"
+        android:text="@string/set_up_instruction_1a"
+        android:textColor="@color/turquoise"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/line_25" />
+    <CheckBox
+        android:id="@+id/dog_owner"
+        android:text="@string/dog_owner_text"
+        android:textSize="16sp"
+        android:checked="false"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line_40"
+        app:layout_constraintBottom_toBottomOf="@id/line_50" />
+    <LinearLayout
+        android:id="@+id/dog_owner_time"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line_55"
+        app:layout_constraintBottom_toBottomOf="@id/line_65">
+        <TextView
+            android:text="@string/set_up_instruction_1b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/owner_years"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/years"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/owner_months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/owner_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <CheckBox
+        android:id="@+id/dog_walker"
+        android:text="@string/dog_walker_text"
+        android:textSize="16sp"
+        android:checked="false"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line_60"
+        app:layout_constraintBottom_toBottomOf="@id/line_70" />
+    <LinearLayout
+        android:id="@+id/dog_walker_time"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line_75"
+        app:layout_constraintBottom_toBottomOf="@id/line_85">
+        <TextView
+            android:text="@string/set_up_instruction_1b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/walker_years"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/years"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/walker_months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <NumberPicker
+            android:id="@+id/walker_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_25" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.25" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_40" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.4" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_50" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.5" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_55" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.55" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_60" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.6" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_65" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.65" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_70" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.7" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_75" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.75" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_85" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.85" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/line_90" android:orientation="horizontal"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintGuide_percent="0.9" />
+</androidx.constraintlayout.widget.ConstraintLayout>

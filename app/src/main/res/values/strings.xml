@@ -16,6 +16,13 @@
     <string name="go_to_login">Already have an account?</string>
     <string name="verify_email_text">Resend Verification Email</string>
     <string name="reset_password_text">Send Password Reset Email</string>
+    <string name="set_up_greeting_1">Welcome to Dog Walker</string>
+    <string name="set_up_greeting_2">Please set up your profile by filling out the information below.</string>
+    <string name="set_up_instruction_1a">Are you a dog owner, a dog walker, or both?</string>
+    <string name="set_up_instruction_1b">How long?</string>
+    <string name="years">years,</string>
+    <string name="months">months,</string>
+    <string name="days">days</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
@@ -35,6 +42,10 @@
     <string name="email_verification">Resend Verification Email</string>
     <string name="reset_password">Reset Password</string>
     <string name="new_account">Create New Account</string>
+
+    <!--CheckBox Text-->
+    <string name="dog_owner_text">I am a dog owner</string>
+    <string name="dog_walker_text">I am a dog walker</string>
 
     <!--Art Credit-->
 

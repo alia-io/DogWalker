@@ -20,11 +20,12 @@ public class User {
     private Object timestamp;
 
     private boolean dogOwner;
+    private Object dogOwnerExperience;  // Length of time user has owned dogs
     private int numberOfDogs;
     private Map<String, Boolean> dogs = new HashMap<>();
 
     private boolean dogWalker;
-    private Object dogWalkingExperience;
+    private Object dogWalkerExperience; // Length of time user has walked dogs
     private int dogWalkerRating;
 
     private Map<String, Boolean> contacts = new HashMap<>();
