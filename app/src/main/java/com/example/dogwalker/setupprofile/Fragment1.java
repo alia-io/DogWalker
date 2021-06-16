@@ -8,62 +8,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 public class Fragment1 extends Fragment {
 
     private FragmentTracker fragmentTracker;
     private View view;
-    private int parentId;
-    private int dogWalkerId;
-    private int dogWalkerTimeId;
     private CheckBox dogOwner;
     private CheckBox dogWalker;
-    private TextView dogOwnerText;
-    private TextView dogWalkerText;
-    private LinearLayout dogOwnerTime;
-    private LinearLayout dogWalkerTime;
     private EditText dogOwnerYears;
     private EditText dogOwnerMonths;
     private EditText dogOwnerDays;
     private EditText dogWalkerYears;
     private EditText dogWalkerMonths;
     private EditText dogWalkerDays;
-    private LinearLayout parentLayout;
-    private LinearLayout dogOwnerLayout;
-    private LinearLayout dogWalkerLayout;
-    //private ConstraintLayout parentLayout;
-    //private ConstraintSet constraintSet;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (view == null) {
-            view = inflater.inflate(R.layout.fragment_set_up_profile_1, container, false);
-
-            parentId = R.id.fragment_parent;
-            dogWalkerId = R.id.dog_walker;
-            dogWalkerTimeId = R.id.dog_walker_time;
-
-            parentLayout = view.findViewById(parentId);
-            dogOwnerLayout = view.findViewById(R.id.dog_owner_layout);
-            dogWalkerLayout = view.findViewById(R.id.dog_walker_layout);
+            view = inflater.inflate(R.layout.fragment_setupprofile_1, container, false);
 
             dogOwner = view.findViewById(R.id.dog_owner);
-            dogWalker = view.findViewById(dogWalkerId);
-            dogOwnerText = view.findViewById(R.id.owner_instruction);
-            dogWalkerText = view.findViewById(R.id.walker_instruction);
-            dogOwnerTime = view.findViewById(R.id.dog_owner_time);
-            dogWalkerTime = view.findViewById(dogWalkerTimeId);
+            dogWalker = view.findViewById(R.id.dog_walker);
 
             dogOwnerYears = view.findViewById(R.id.owner_years);
             dogOwnerMonths = view.findViewById(R.id.owner_months);
@@ -72,28 +44,19 @@ public class Fragment1 extends Fragment {
             dogWalkerMonths = view.findViewById(R.id.walker_months);
             dogWalkerDays = view.findViewById(R.id.walker_days);
 
-            //constraintSet = new ConstraintSet();
-            //constraintSet.clone(parentLayout);
+            TextView dogOwnerText = view.findViewById(R.id.owner_instruction);
+            TextView dogWalkerText = view.findViewById(R.id.walker_instruction);
+            LinearLayout dogOwnerTime = view.findViewById(R.id.dog_owner_time);
+            LinearLayout dogWalkerTime = view.findViewById(R.id.dog_walker_time);
 
             dogOwner.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     dogOwnerText.setVisibility(View.VISIBLE);
                     dogOwnerTime.setVisibility(View.VISIBLE);
-                    //parentLayout.setWeightSum(parentLayout.getWeightSum() + 1f);
-
-                    /*constraintSet.connect(dogWalkerId, ConstraintSet.TOP, R.id.line_75, ConstraintSet.TOP);
-                    constraintSet.connect(dogWalkerId, ConstraintSet.BOTTOM, R.id.line_85, ConstraintSet.BOTTOM);
-                    constraintSet.connect(dogWalkerTimeId, ConstraintSet.TOP, R.id.line_90, ConstraintSet.TOP);
-                    constraintSet.connect(dogWalkerTimeId, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM);*/
                 } else {
                     dogOwnerText.setVisibility(View.GONE);
                     dogOwnerTime.setVisibility(View.GONE);
-                    /*constraintSet.connect(dogWalkerId, ConstraintSet.TOP, R.id.line_60, ConstraintSet.TOP);
-                    constraintSet.connect(dogWalkerId, ConstraintSet.BOTTOM, R.id.line_70, ConstraintSet.BOTTOM);
-                    constraintSet.connect(dogWalkerTimeId, ConstraintSet.TOP, R.id.line_75, ConstraintSet.TOP);
-                    constraintSet.connect(dogWalkerTimeId, ConstraintSet.BOTTOM, R.id.line_85, ConstraintSet.BOTTOM);*/
                 }
-                //constraintSet.applyTo(parentLayout);
             });
 
             dogWalker.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -124,9 +87,21 @@ public class Fragment1 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        fragmentTracker.saveFragment1(dogOwner.isChecked(), dogWalker.isChecked(),
-                Integer.parseInt(dogOwnerYears.getText().toString()), Integer.parseInt(dogOwnerMonths.getText().toString()),
-                Integer.parseInt(dogOwnerDays.getText().toString()), Integer.parseInt(dogWalkerYears.getText().toString()),
-                Integer.parseInt(dogWalkerMonths.getText().toString()), Integer.parseInt(dogWalkerDays.getText().toString()));
+
+        int ownerYears = 0;
+        int ownerMonths = 0;
+        int ownerDays = 0;
+        int walkerYears = 0;
+        int walkerMonths = 0;
+        int walkerDays = 0;
+
+        if (!dogOwnerYears.getText().toString().equals("")) ownerYears = Integer.parseInt(dogOwnerYears.getText().toString());
+        if (!dogOwnerMonths.getText().toString().equals("")) ownerMonths = Integer.parseInt(dogOwnerMonths.getText().toString());
+        if (!dogOwnerDays.getText().toString().equals("")) ownerDays = Integer.parseInt(dogOwnerDays.getText().toString());
+        if (!dogWalkerYears.getText().toString().equals("")) walkerYears = Integer.parseInt(dogWalkerYears.getText().toString());
+        if (!dogWalkerMonths.getText().toString().equals("")) walkerMonths = Integer.parseInt(dogWalkerMonths.getText().toString());
+        if (!dogWalkerDays.getText().toString().equals("")) walkerDays = Integer.parseInt(dogWalkerDays.getText().toString());
+
+        fragmentTracker.saveFragment1(dogOwner.isChecked(), dogWalker.isChecked(), ownerYears, ownerMonths, ownerDays, walkerYears, walkerMonths, walkerDays);
     }
 }

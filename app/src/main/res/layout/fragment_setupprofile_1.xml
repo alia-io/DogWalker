@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_parent"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -38,7 +37,7 @@
         <LinearLayout
             android:id="@+id/dog_owner_time"
             android:visibility="gone"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -97,7 +96,7 @@
         <LinearLayout
             android:id="@+id/dog_walker_time"
             android:visibility="gone"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

@@ -21,10 +21,10 @@
     <color name="light_peach">#FFFED9B7</color>
     <color name="golden">#FFFFCB77</color>
     <color name="dark_golden">#FFFFBC42</color>
-    <color name="off_white">#FFFDFCDC</color>
     <color name="lilac_gray">#FFBFB6BB</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="off_white">#FFFDFCDC</color>
     <color name="transparent">#00000000</color>
-
 
     <color name="dark_maroon">#FF412234</color>
     <color name="reddish_brown">#FF591F0A</color>
