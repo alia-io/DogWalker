@@ -1,4 +1,6 @@
-package com.example.dogwalker;
+package com.example.dogwalker.auth;
+
+import com.example.dogwalker.R;
 
 import android.app.ActionBar;
 import android.app.Dialog;

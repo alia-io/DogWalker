@@ -1,7 +1,7 @@
 package com.example.dogwalker.setupprofile;
 
-import com.example.dogwalker.Dog;
 import com.example.dogwalker.R;
+import com.example.dogwalker.SplashActivity;
 import com.example.dogwalker.User;
 
 import androidx.annotation.NonNull;
@@ -44,7 +44,7 @@ import java.util.UUID;
 
 public class SetUpProfileActivity extends AppCompatActivity implements FragmentTracker, PopupMenu.OnMenuItemClickListener {
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private DatabaseReference userRef;
@@ -70,8 +70,8 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up_profile);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("Users/" + currentUser.getUid());
         storage = FirebaseStorage.getInstance();
@@ -108,7 +108,10 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
             leftArrow.setVisibility(View.VISIBLE);
         } else if (currentFragment == 2) {
             loadFragment(fragment3);
-        } else return;
+        } else {
+            if (currentFragment == 3) finishProfileSetup();
+            return;
+        }
         currentFragment++;
     }
 
@@ -220,15 +223,14 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
         }
     }
 
-    @Override
-    public void finished() {
+    public void finishProfileSetup() {
         if (!user.isDogOwner() && !user.isDogWalker()) {
-            Toast.makeText(this, "You must be either a dog owner or a dog walker!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You must be either a dog owner or a dog walker to continue!", Toast.LENGTH_SHORT).show();
             return;
         }
-        // TODO: ALL profile picture Uris MUST be changed (see saveToDB)
-        // TODO: save to DB and go to next activity
         updateUser();
+        startActivity(new Intent(this, SplashActivity.class));
+        finish();
     }
 
     private void updateUser() {
@@ -240,7 +242,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
                                     user.setProfilePicture(uri.toString());
                                     userRef.setValue(user)
                                             .addOnSuccessListener(aVoid ->
-                                                    Toast.makeText(SetUpProfileActivity.this, "Your profile as been set!", Toast.LENGTH_SHORT).show())
+                                                    Toast.makeText(SetUpProfileActivity.this, "Your profile as been set up!", Toast.LENGTH_SHORT).show())
                                             .addOnFailureListener(e ->
                                                     Toast.makeText(SetUpProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                                 })
@@ -248,10 +250,6 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
                                         Toast.makeText(SetUpProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()))
                 .addOnFailureListener(e ->
                         Toast.makeText(SetUpProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
-    private void addNewDog(User user, Dog dog) {
-
     }
 
     @Override

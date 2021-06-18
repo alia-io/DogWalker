@@ -26,11 +26,17 @@
     <string name="days">days</string>
     <string name="set_up_instruction_2">Upload a profile picture. Other users will be more likely to trust and interact with you!</string>
     <string name="set_up_instruction_3">Tell other users a little about yourself.</string>
+    <string name="edit_dogs_title">My Dogs</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
     <string name="login_button">Login</string>
     <string name="send_email_button">Submit</string>
+    <string name="submit_profile_button">Submit Profile</string>
+    <string name="start_walk">Start a New Walk</string>
+    <string name="add_dog">Add Dog</string>
+    <string name="save_dogs">Save Dogs</string>
+    <string name="save_dog">Save Dog</string>
 
     <string name="verify_email_button">Send Verification Email</string>
     <string name="reset_password_button">Send Password Reset Email</string>
@@ -40,6 +46,9 @@
     <string name="password_hint">Password</string>
     <string name="name_hint">Profile Nickname</string>
     <string name="phone_hint">Phone Number</string>
+    <string name="name">Name</string>
+    <string name="dog_breed">Breed</string>
+    <string name="birth_date">Birth Date</string>
 
     <!--Menu Text-->
     <string name="email_verification">Resend Verification Email</string>
@@ -47,10 +56,19 @@
     <string name="new_account">Create New Account</string>
     <string name="take_picture">Take New Picture</string>
     <string name="upload_picture">Upload Picture</string>
+    <string name="view_profile">View Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_dogs">Edit Dogs</string>
+    <string name="find_users">Find Local Dog Lovers</string>
+    <string name="view_contacts">View Contacts</string>
+    <string name="view_walk_activity">View Walk Activity</string>
+    <string name="logout">Logout</string>
 
     <!--CheckBox Text-->
     <string name="dog_owner_text">I am a dog owner</string>
     <string name="dog_walker_text">I am a dog walker</string>
+    <string name="active_dog_owner">Looking for Walkers</string>
+    <string name="active_dog_walker">Looking for Dogs</string>
 
     <!--Art Credit-->
 

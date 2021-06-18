@@ -6,12 +6,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
-    <TextView
-        android:text="Home Activity"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@drawable/toolbar"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/DogWalker.ActionBar.Menu"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/logo_transparent"
+                android:layout_margin="3sp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="@string/app_name"
+                android:textColor="@color/slate_blue"
+                android:textStyle="bold"
+                android:fontFamily="casual"
+                android:textSize="24sp"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <RelativeLayout
+        android:id="@+id/user_profile_layout"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        <ImageView
+            android:id="@+id/user_profile_picture"
+            android:src="@drawable/ic_default_user_profile"
+            android:background="@drawable/default_profile_background"
+            android:layout_marginEnd="10dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentTop="true" />
+        <TextView
+            android:id="@+id/user_display_name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/user_profile_picture" />
+        <CheckBox
+            android:id="@+id/looking_for_walkers"
+            android:text="@string/active_dog_owner"
+            android:visibility="gone"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/user_profile_picture"
+            android:layout_below="@id/user_display_name" />
+        <CheckBox
+            android:id="@+id/looking_for_dogs"
+            android:text="@string/active_dog_walker"
+            android:visibility="gone"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/user_profile_picture"
+            android:layout_below="@id/looking_for_walkers" />
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/divider_1"
+        android:src="@drawable/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/user_profile_layout" />
+
+
+    <Button
+        android:id="@+id/walk_button"
+        android:text="@string/start_walk"
+        android:textColor="@color/light_green"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:background="@drawable/button_style"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

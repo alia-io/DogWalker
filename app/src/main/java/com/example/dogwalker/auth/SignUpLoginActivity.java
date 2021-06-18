@@ -1,4 +1,8 @@
-package com.example.dogwalker;
+package com.example.dogwalker.auth;
+
+import com.example.dogwalker.R;
+import com.example.dogwalker.SplashActivity;
+import com.example.dogwalker.User;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpLoginActivity extends AppCompatActivity implements AuthActionDialogListener {
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
     private FirebaseUser currentUser;
     private TextView instructionText;
     private LinearLayout bottomLayout;
@@ -39,8 +43,8 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
         setSupportActionBar(findViewById(R.id.toolbar));
         loginMode = getIntent().getBooleanExtra("login_mode", false);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
 
         instructionText = findViewById(R.id.instruction);
         bottomLayout = findViewById(R.id.bottom_layout);
@@ -102,7 +106,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(emailAddress.getText().toString(), passwordInput.getText().toString())
+        auth.createUserWithEmailAndPassword(emailAddress.getText().toString(), passwordInput.getText().toString())
                 .addOnSuccessListener(authResult -> {
                     currentUser = authResult.getUser();
                     assert currentUser != null;
@@ -140,7 +144,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, pass)
+        auth.signInWithEmailAndPassword(email, pass)
                 .addOnSuccessListener(authResult -> {
                     currentUser = authResult.getUser();
                     assert currentUser != null;
@@ -199,7 +203,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
                     .addOnFailureListener(e ->
                             Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
-            mAuth.signInWithEmailAndPassword(email, password)
+            auth.signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener(authResult -> {
                         Toast.makeText(SignUpLoginActivity.this, "Verification email sent!", Toast.LENGTH_SHORT).show();
                         fragment.dismiss();
@@ -217,7 +221,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
             return;
         }
 
-        mAuth.sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(SignUpLoginActivity.this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
                     fragment.dismiss();

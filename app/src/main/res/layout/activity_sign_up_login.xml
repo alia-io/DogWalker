@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpLoginActivity">
+    tools:context=".auth.SignUpLoginActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:background="@drawable/toolbar"
@@ -59,6 +59,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/profile_name_layout"
             android:hint="@string/name_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/DogWalker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_name"
@@ -68,6 +70,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phone_number_layout"
             android:hint="@string/phone_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/DogWalker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phone_number"
@@ -77,6 +81,8 @@
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:hint="@string/email_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/DogWalker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email_address"
@@ -85,6 +91,8 @@
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:hint="@string/password_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/DogWalker.TextInputLayout">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password"

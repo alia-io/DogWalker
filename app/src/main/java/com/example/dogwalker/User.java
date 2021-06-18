@@ -27,9 +27,15 @@ public class User {
     private boolean dogWalker;
     private Object dogWalkerExperience; // Length of time user has walked dogs
     private int dogWalkerRating;
+    private int numberOfRatings;
 
-    private Map<String, Boolean> contacts = new HashMap<>();
+    private Map<String, String> contacts = new HashMap<>();     // userID : chatID
+    private Map<String, String> otherUsers = new HashMap<>();   // userID : chatID
     private String dogWalkingLog;
+
+    private boolean dogOwnerActive;     // Currently looking for walkers
+    private boolean dogWalkerActive;    // Currently looking for walks
+    private boolean currentWalk;        // Currently on a walk
 
     public User(String profileName, String phoneNumber, String emailAddress) {
         this.profileName = profileName;

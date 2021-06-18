@@ -1,5 +1,6 @@
 package com.example.dogwalker;
 
+import com.example.dogwalker.auth.SignUpLoginActivity;
 import com.example.dogwalker.setupprofile.SetUpProfileActivity;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private boolean finishActivity;
@@ -29,8 +30,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
 
         finishActivity = getIntent().getBooleanExtra("finish", false);
@@ -76,9 +77,13 @@ public class SplashActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 assert user != null;
-                if (user.isDogOwner() || user.isDogWalker()) // Profile setup not needed
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                else // Profile setup needed
+                if (user.isDogOwner() || user.isDogWalker()) { // Profile setup not needed
+                    if (user.isCurrentWalk()) // User has a currently active walk
+                        // TODO: take to current walk activity instead of HomeActivity
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    else // User does not have a currently active walk
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                } else // Profile setup needed
                     startActivity(new Intent(SplashActivity.this, SetUpProfileActivity.class));
                 if (finishActivity) finish();
             }
