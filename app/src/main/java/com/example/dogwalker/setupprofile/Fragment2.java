@@ -49,7 +49,6 @@ public class Fragment2 extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             fragmentTracker = (FragmentTracker) context;
         } catch (ClassCastException e) {
@@ -65,6 +64,7 @@ public class Fragment2 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        fragmentTracker.saveFragment2(profilePictureUri);
+        if (profilePictureUri != null)
+            fragmentTracker.saveFragment2(profilePictureUri);
     }
 }

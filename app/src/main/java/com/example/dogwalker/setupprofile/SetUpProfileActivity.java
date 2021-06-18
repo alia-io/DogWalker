@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -58,6 +56,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
     private int currentFragment = 0;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
+    private Fragment3 fragment3;
 
     private ImageView leftArrow;
     private ImageView rightArrow;
@@ -86,6 +85,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
 
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -106,6 +106,8 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
         } else if (currentFragment == 1) {
             loadFragment(fragment2);
             leftArrow.setVisibility(View.VISIBLE);
+        } else if (currentFragment == 2) {
+            loadFragment(fragment3);
         } else return;
         currentFragment++;
     }
@@ -115,6 +117,8 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
         if (currentFragment == 2) {
             loadFragment(fragment1);
             leftArrow.setVisibility(View.INVISIBLE);
+        } else if (currentFragment == 3) {
+            loadFragment(fragment2);
         } else return;
         currentFragment--;
     }
@@ -145,6 +149,11 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
     @Override
     public void saveFragment2(Uri uri) {
         user.setProfilePicture(uri.toString());
+    }
+
+    @Override
+    public void saveFragment3(String aboutMe) {
+        user.setProfileAboutMe(aboutMe);
     }
 
     @Override

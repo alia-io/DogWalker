@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/instruction"
+        android:text="@string/set_up_instruction_3"
+        android:textColor="@color/turquoise"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginBottom="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/about_me"
+        android:background="@color/off_white"
+        android:gravity="start"
+        android:layout_gravity="center"
+        android:padding="2dp"
+        android:layout_margin="10dp"
+        android:layout_below="@id/instruction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>
