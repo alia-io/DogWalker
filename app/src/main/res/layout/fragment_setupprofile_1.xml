@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="@string/years"
+                android:text="@string/years_comma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="@string/months"
+                android:text="@string/months_comma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="@string/years"
+                android:text="@string/years_comma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="@string/months"
+                android:text="@string/months_comma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText

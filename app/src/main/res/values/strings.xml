@@ -21,15 +21,32 @@
     <string name="set_up_instruction_1">Are you a dog owner, a dog walker, or both?</string>
     <string name="set_up_instruction_1_owner">Approximately how long have you been a dog owner?</string>
     <string name="set_up_instruction_1_walker">Approximately long have you been a dog walker?</string>
-    <string name="years">years,</string>
-    <string name="months">months,</string>
-    <string name="days">days</string>
     <string name="set_up_instruction_2">Upload a profile picture. Other users will be more likely to trust and interact with you!</string>
     <string name="set_up_instruction_3">Tell other users a little about yourself.</string>
     <string name="edit_dogs_title">My Dogs</string>
     <string name="training_level">Level of Training:</string>
     <string name="health_and_needs">Relevant health information &amp; other needs:</string>
     <string name="walker_requirements">Requirements for dog walker:</string>
+    <string name="dog_breed_title">Breed:</string>
+    <string name="dog_age_title">Age:</string>
+    <string name="about_me_title">About Me:</string>
+    <string name="dog_training_title">Training:</string>
+    <string name="dog_walk_length_title">Average Walk Length:</string>
+    <string name="dog_needs_title">Health &amp; Other Needs:</string>
+    <string name="dog_requirements_title">Walker Requirements:</string>
+
+    <string name="comma">,</string>
+    <string name="no_answer">N/A</string>
+
+    <!--Dates-->
+    <string name="day">day</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
+    <string name="days">days</string>
+    <string name="months">months</string>
+    <string name="years">years</string>
+    <string name="months_comma">months,</string>
+    <string name="years_comma">years,</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>

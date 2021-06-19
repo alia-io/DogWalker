@@ -25,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +54,6 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dogs);
-        setSupportActionBar(findViewById(R.id.toolbar));
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
@@ -65,13 +63,22 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
 
         activityLayout = findViewById(R.id.layout_parent);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new EditDogsRecyclerAdapter();
+        recyclerAdapter = new EditDogsRecyclerAdapter(this, recyclerView);
         recyclerView.setAdapter(recyclerAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recyclerAdapter.removeListener();
     }
 
     public void addDog(View view) {
@@ -157,13 +164,13 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
     }
 
     @Override
-    public void setDog(Dog dog, String dogId, boolean isDogNew, boolean isProfilePictureNew) {
-        if (isProfilePictureNew) uploadProfilePicture(dog, dogId, isDogNew);
+    public void setDog(String dogKey, Dog dog, boolean isDogNew, boolean isProfilePictureNew) {
+        if (isProfilePictureNew) uploadProfilePicture(dogKey, dog, isDogNew);
         else if (isDogNew) saveNewDogToDatabase(dog);
-        else updateDogInDatabase(dog, dogId);
+        else updateDogInDatabase(dogKey, dog);
     }
 
-    private void uploadProfilePicture(Dog dog, String dogId, boolean isDogNew) {
+    private void uploadProfilePicture(String dogKey, Dog dog, boolean isDogNew) {
         final StorageReference imageRef = storage.getReference("Images/" + UUID.randomUUID().toString() + ".jpg");
         imageRef.putFile(Uri.parse(dog.getProfilePicture()))
                 .addOnSuccessListener(taskSnapshot ->
@@ -171,7 +178,7 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
                                 .addOnSuccessListener(uri -> {
                                     dog.setProfilePicture(uri.toString());
                                     if (isDogNew) saveNewDogToDatabase(dog);
-                                    else updateDogInDatabase(dog, dogId);
+                                    else updateDogInDatabase(dogKey, dog);
                                 })
                                 .addOnFailureListener(e ->
                                         Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()))
@@ -193,8 +200,8 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
                         Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void updateDogInDatabase(Dog dog, String dogId) {
-        DatabaseReference dogRef = database.getReference("Dogs/" + dogId);
+    private void updateDogInDatabase(String dogKey, Dog dog) {
+        DatabaseReference dogRef = database.getReference("Dogs/" + dogKey);
         dogRef.setValue(dog)
                 .addOnSuccessListener(aVoid ->
                         Toast.makeText(EditDogsActivity.this, "Your dog's profile was updated!", Toast.LENGTH_SHORT).show())

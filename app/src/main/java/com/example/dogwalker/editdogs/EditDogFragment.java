@@ -5,7 +5,6 @@ import com.example.dogwalker.Dog;
 import com.example.dogwalker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ServerValue;
 import com.squareup.picasso.Picasso;
 
 import android.app.DatePickerDialog;
@@ -13,7 +12,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,7 +29,6 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +41,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
     private EditDogDialogListener listener;
     private View view;
     private Dog dog;
-    private String dogId;
+    private String dogKey;
     private int height = 0;
 
     private ImageView profilePicture;
@@ -63,11 +60,11 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
     private List<EditText> dogInfoAndHealthNeeds = new ArrayList<>();
     private List<EditText> dogWalkerRequirements = new ArrayList<>();
 
-    public static EditDogFragment newInstance(int layout, String dogId, int height) {
+    public static EditDogFragment newInstance(int layout, String dogKey, int height) {
         EditDogFragment fragment = new EditDogFragment();
         Bundle args = new Bundle();
         args.putInt("layout", layout);
-        args.putString("dog_id", dogId);
+        args.putString("dog_key", dogKey);
         args.putInt("height", height);
         fragment.setArguments(args);
         return fragment;
@@ -96,7 +93,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
 
         Bundle args = getArguments();
         int layout = args.getInt("layout");
-        dogId = args.getString("dog_id");
+        dogKey = args.getString("dog_key");
         height = args.getInt("height");
 
         auth = FirebaseAuth.getInstance();
@@ -159,6 +156,10 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         birthDate = calendar.getTimeInMillis();
+        if (birthDate > Calendar.getInstance().getTimeInMillis()) {
+            Toast.makeText(getContext(), "Invalid birth date!", Toast.LENGTH_SHORT).show();
+            birthDate = null;
+        }
     }
 
     public void setProfilePicturePreview(Uri imageUri) {
@@ -198,8 +199,8 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         final int wellTrainedId = R.id.well_trained;
         final int expertTrainingId = R.id.expert_training;
         final int unknownTrainingId = R.id.unknown_training;
-        Map<Integer, String> infoAndHealthNeeds = dog.getInfoAndHealthNeeds();
-        Map<Integer, String> walkerRequirements = dog.getWalkerRequirements();
+        Map<String, String> infoAndHealthNeeds = dog.getInfoAndHealthNeeds();
+        Map<String, String> walkerRequirements = dog.getWalkerRequirements();
         int index;
 
         dog.setName(dogName.getText().toString());
@@ -207,11 +208,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
 
         if (breed != null && !breed.equals("")) dog.setBreed(breed);
         if (about != null && !about.equals("")) dog.setProfileAboutMe(about);
-
-        if (birthDate != null) {
-            if (birthDate <= Calendar.getInstance().getTimeInMillis()) dog.setBirthDate(birthDate);
-            else Toast.makeText(getContext(), "Invalid birth date!", Toast.LENGTH_SHORT).show();
-        }
+        if (birthDate != null) dog.setBirthDate(birthDate);
 
         if (profilePictureUri != null) {
             dog.setProfilePicture(profilePictureUri.toString());
@@ -243,8 +240,8 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         infoAndHealthNeeds.clear();
         for (int i = 0; i < dogInfoAndHealthNeeds.size(); i++) {
             String entry = dogInfoAndHealthNeeds.get(i).getText().toString();
-            if (!entry.equals("")) {
-                infoAndHealthNeeds.put(index, entry);
+            if (entry != null && !entry.equals("")) {
+                infoAndHealthNeeds.put(String.valueOf(index), entry);
                 index++;
             }
         }
@@ -254,14 +251,14 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         walkerRequirements.clear();
         for (int i = 0; i < dogWalkerRequirements.size(); i++) {
             String entry = dogWalkerRequirements.get(i).getText().toString();
-            if (!entry.equals("")) {
-                walkerRequirements.put(index, entry);
+            if (entry != null && !entry.equals("")) {
+                walkerRequirements.put(String.valueOf(index), entry);
                 index++;
             }
         }
         dog.setWalkerRequirements(walkerRequirements);
 
-        listener.setDog(dog, dogId, getTag().equals("add_dog"), newProfilePicture);
+        listener.setDog(dogKey, dog, getTag().equals("add_dog"), newProfilePicture);
         dismiss();
     }
 }

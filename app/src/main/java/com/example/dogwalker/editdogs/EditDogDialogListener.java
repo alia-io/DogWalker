@@ -6,5 +6,5 @@ import com.example.dogwalker.Dog;
 
 public interface EditDogDialogListener {
     void onAddDogPictureButtonClick(View v);
-    void setDog(Dog dog, String dogId, boolean isDogNew, boolean isProfilePictureNew);
+    void setDog(String dogId, Dog dog, boolean isDogNew, boolean isProfilePictureNew);
 }
