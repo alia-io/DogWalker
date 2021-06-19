@@ -161,8 +161,8 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        final int takePicture = R.id.take_picture;
-        final int uploadPicture = R.id.upload_picture;
+        final int takePicture = R.id.action_take_picture;
+        final int uploadPicture = R.id.action_upload_picture;
         switch (item.getItemId()) {
             case takePicture:
                 takeProfilePicture();

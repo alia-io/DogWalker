@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_edit_dog" android:title="@string/edit_dog" />
+    <item android:id="@+id/action_remove_dog" android:title="@string/remove_dog" />
+</menu>

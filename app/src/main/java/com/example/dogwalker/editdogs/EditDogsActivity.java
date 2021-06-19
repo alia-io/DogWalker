@@ -89,7 +89,7 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
 
     @Override
     public void onAddDogPictureButtonClick(View v) {
-        android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(this, v);
+        PopupMenu popupMenu = new PopupMenu(this, v);
         MenuInflater menuInflater = popupMenu.getMenuInflater();
         menuInflater.inflate(R.menu.menu_picture_popup, popupMenu.getMenu());
         try {
@@ -102,8 +102,8 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        final int takePicture = R.id.take_picture;
-        final int uploadPicture = R.id.upload_picture;
+        final int takePicture = R.id.action_take_picture;
+        final int uploadPicture = R.id.action_upload_picture;
         switch (item.getItemId()) {
             case takePicture:
                 takeProfilePicture();

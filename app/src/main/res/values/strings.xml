@@ -85,6 +85,8 @@
     <string name="view_contacts">View Contacts</string>
     <string name="view_walk_activity">View Walk Activity</string>
     <string name="logout">Logout</string>
+    <string name="edit_dog">Edit Dog</string>
+    <string name="remove_dog">Remove Dog</string>
 
     <!--CheckBox Text-->
     <string name="dog_owner_text">I am a dog owner</string>
