@@ -75,8 +75,6 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
     }
 
     public void addDog(View view) {
-        Log.d("height", "view height = " + activityLayout.getHeight());
-        Log.d("height", "subtract height = " + getSupportActionBar().getHeight());
         editDogFragment = EditDogFragment.newInstance(R.layout.fragment_edit_dog, "",
                 activityLayout.getHeight() - (getSupportActionBar().getHeight() * 3));
         editDogFragment.show(getSupportFragmentManager(), "add_dog");

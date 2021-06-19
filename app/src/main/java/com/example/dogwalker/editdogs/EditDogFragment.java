@@ -5,6 +5,7 @@ import com.example.dogwalker.Dog;
 import com.example.dogwalker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
 import com.squareup.picasso.Picasso;
 
 import android.app.DatePickerDialog;
@@ -12,17 +13,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -59,7 +59,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
     private LinearLayout walkerRequirementsLayout;
 
     private Uri profilePictureUri = null;
-    private long birthDate = -1;
+    private Long birthDate = null;
     private List<EditText> dogInfoAndHealthNeeds = new ArrayList<>();
     private List<EditText> dogWalkerRequirements = new ArrayList<>();
 
@@ -123,21 +123,12 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         infoAndHealthNeedsLayout = view.findViewById(R.id.health_and_needs);
         walkerRequirementsLayout = view.findViewById(R.id.walker_requirements);
 
+        birthDateView.setOnClickListener(v -> setBirthDate(true));
+        birthDateView.setOnFocusChangeListener((v, hasFocus) -> setBirthDate(hasFocus));
         view.findViewById(R.id.add_profile_picture).setOnClickListener(v -> listener.onAddDogPictureButtonClick(v));
-        view.findViewById(R.id.add_health_and_needs).setOnClickListener(this::addNewHealthAndNeeds);
-        view.findViewById(R.id.add_walker_requirements).setOnClickListener(this::addNewWalkerRequirements);
-
-        birthDateView.setOnClickListener(v -> {
-            final Calendar calendar = Calendar.getInstance();
-            new DatePickerDialog(getContext(), EditDogFragment.this,
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-
-        view.findViewById(R.id.save_dog).setOnClickListener(v -> {
-            if (dogName.getText().toString().equals(""))
-                Toast.makeText(getContext(), "Your dog must have a name!", Toast.LENGTH_SHORT).show();
-            else dismiss();
-        });
+        view.findViewById(R.id.add_health_and_needs).setOnClickListener(v -> addNewHealthAndNeeds());
+        view.findViewById(R.id.add_walker_requirements).setOnClickListener(v -> addNewWalkerRequirements());
+        view.findViewById(R.id.save_dog).setOnClickListener(v -> saveButton());
 
         if (getTag().equals("edit_dog")) getDogFromDatabase();
         else dog = new Dog();
@@ -147,78 +138,12 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         //TODO: use dogId to get the dog from DB & set values
     }
 
-    public void setProfilePicturePreview(Uri imageUri) {
-        profilePictureUri = imageUri;
-        profilePicture.setBackground(null);
-        Picasso.get().load(profilePictureUri.toString()).transform(new CircleTransform()).into(profilePicture);
-    }
-
-    private void addNewHealthAndNeeds(View v) {
-
-        int insertIndex = infoAndHealthNeedsLayout.indexOfChild(view.findViewById(((RelativeLayout) v.getParent()).getId())) + 1;
-
-        Button button = new Button(getContext());
-        button.setId(View.generateViewId());
-        button.setBackgroundResource(R.drawable.ic_add);
-        button.setGravity(Gravity.TOP);
-        button.setWidth(30);
-        button.setHeight(30);
-        button.setOnClickListener(this::addNewHealthAndNeeds);
-
-        EditText editText = new EditText(getContext());
-        RelativeLayout.LayoutParams paramsET = new RelativeLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        paramsET.addRule(RelativeLayout.LEFT_OF, button.getId());
-        editText.setLayoutParams(paramsET);
-        editText.setId(View.generateViewId());
-        editText.setBackgroundResource(R.drawable.text_input_layout_style);
-
-        RelativeLayout relativeLayout = new RelativeLayout(getContext());
-        relativeLayout.setId(View.generateViewId());
-        relativeLayout.addView(editText);
-        relativeLayout.addView(button);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_END, button.getId());
-        params.addRule(RelativeLayout.ALIGN_PARENT_START, editText.getId());
-        relativeLayout.setLayoutParams(params);
-
-        infoAndHealthNeedsLayout.addView(relativeLayout, insertIndex);
-        dogInfoAndHealthNeeds.add(insertIndex, editText);
-    }
-
-    private void addNewWalkerRequirements(View v) {
-
-        int insertIndex = walkerRequirementsLayout.indexOfChild(view.findViewById(((RelativeLayout) v.getParent()).getId())) + 1;
-
-        Button button = new Button(getContext());
-        button.setId(View.generateViewId());
-        button.setBackgroundResource(R.drawable.ic_add);
-        button.setGravity(Gravity.TOP);
-        button.setWidth(30);
-        button.setHeight(30);
-        button.setOnClickListener(this::addNewWalkerRequirements);
-
-        EditText editText = new EditText(getContext());
-        RelativeLayout.LayoutParams paramsET = new RelativeLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        paramsET.addRule(RelativeLayout.LEFT_OF, button.getId());
-        editText.setLayoutParams(paramsET);
-        editText.setId(View.generateViewId());
-        editText.setBackgroundResource(R.drawable.text_input_layout_style);
-
-        RelativeLayout relativeLayout = new RelativeLayout(getContext());
-        relativeLayout.setId(View.generateViewId());
-        relativeLayout.addView(editText);
-        relativeLayout.addView(button);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_END, button.getId());
-        params.addRule(RelativeLayout.ALIGN_PARENT_START, editText.getId());
-        relativeLayout.setLayoutParams(params);
-
-        walkerRequirementsLayout.addView(relativeLayout, insertIndex);
-        dogWalkerRequirements.add(insertIndex, editText);
+    private void setBirthDate(boolean hasFocus) {
+        if (hasFocus) {
+            final Calendar calendar = Calendar.getInstance();
+            new DatePickerDialog(getContext(), EditDogFragment.this,
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        }
     }
 
     @Override
@@ -236,13 +161,37 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         birthDate = calendar.getTimeInMillis();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    public void setProfilePicturePreview(Uri imageUri) {
+        profilePictureUri = imageUri;
+        profilePicture.setBackground(null);
+        Picasso.get().load(profilePictureUri.toString()).transform(new CircleTransform()).into(profilePicture);
+    }
 
-        String breed = dogBreed.getText().toString();
+    private void addNewHealthAndNeeds() {
+        EditText editText = new EditText(getContext());
+        editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        infoAndHealthNeedsLayout.addView(editText);
+        dogInfoAndHealthNeeds.add(editText);
+    }
+
+    private void addNewWalkerRequirements() {
+        EditText editText = new EditText(getContext());
+        editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        walkerRequirementsLayout.addView(editText);
+        dogWalkerRequirements.add(editText);
+    }
+
+    private void saveButton() {
+        if (dogName.getText().toString().equals(""))
+            Toast.makeText(getContext(), "Your dog must have a name!", Toast.LENGTH_SHORT).show();
+        else saveDog();
+    }
+
+    private void saveDog() {
+
         boolean newProfilePicture = false;
-        String aboutMe = aboutDog.getText().toString();
+        String breed = dogBreed.getText().toString();
+        String about = aboutDog.getText().toString();
         String averageWalkLength = walkLength.getText().toString();
         final int untrainedId = R.id.untrained;
         final int minimallyTrainedId = R.id.minimally_trained;
@@ -256,23 +205,21 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         dog.setName(dogName.getText().toString());
         dog.setOwner(currentUser.getUid());
 
-        if (!breed.equals("") || dog.getBreed() != null || !dog.getBreed().equals("")) dog.setBreed(breed);
-        if (!aboutMe.equals("") || dog.getProfileAboutMe() != null || dog.getProfileAboutMe().equals("")) dog.setProfileAboutMe(aboutMe);
-        if (birthDate == -1 && dog.getBirthDate() != null) dog.setBirthDate(null);
-        if (birthDate != -1) dog.setBirthDate(birthDate);
+        if (breed != null && !breed.equals("")) dog.setBreed(breed);
+        if (about != null && !about.equals("")) dog.setProfileAboutMe(about);
+
+        if (birthDate != null) {
+            if (birthDate <= Calendar.getInstance().getTimeInMillis()) dog.setBirthDate(birthDate);
+            else Toast.makeText(getContext(), "Invalid birth date!", Toast.LENGTH_SHORT).show();
+        }
 
         if (profilePictureUri != null) {
             dog.setProfilePicture(profilePictureUri.toString());
             newProfilePicture = true;
         }
 
-        if (!averageWalkLength.equals("")) {
-            dog.setAverageWalkLength(Integer.parseInt(averageWalkLength));
-            dog.setWalkLengthUnits(walkLengthUnits.getSelectedItem().toString());
-        } else if (dog.getAverageWalkLength() == null) {
-            dog.setAverageWalkLength(null);
-            dog.setWalkLengthUnits(null);
-        }
+        if (averageWalkLength == null || averageWalkLength.equals("")) dog.setAverageWalkLength(null);
+        else dog.setAverageWalkLength(averageWalkLength + " " + walkLengthUnits.getSelectedItem().toString());
 
         switch (trainingLevel.getCheckedRadioButtonId()) {
             case untrainedId:
@@ -314,7 +261,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         }
         dog.setWalkerRequirements(walkerRequirements);
 
-        if (getTag().equals("add_dog")) listener.setDog(dog, dogId, true, newProfilePicture);
-        else listener.setDog(dog, dogId, false, newProfilePicture);
+        listener.setDog(dog, dogId, getTag().equals("add_dog"), newProfilePicture);
+        dismiss();
     }
 }

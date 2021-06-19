@@ -15,8 +15,7 @@ public class Dog {
     private String profilePicture;
     private String profileAboutMe;
     private Object birthDate;
-    private Integer averageWalkLength;
-    private String walkLengthUnits;
+    private String averageWalkLength;
     private String trainingLevel;
     private Map<Integer, String> infoAndHealthNeeds = new HashMap<>();
     private Map<Integer, String> walkerRequirements = new HashMap<>();
