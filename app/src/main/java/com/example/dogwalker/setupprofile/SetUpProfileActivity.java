@@ -175,7 +175,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
         }
     }
 
-    public void takeProfilePicture() {
+    private void takeProfilePicture() {
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "We need permission to access your camera and photos", Toast.LENGTH_SHORT).show();
@@ -210,7 +210,6 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_FOR_CAMERA && resultCode == RESULT_OK) {
             if (uri == null)
                 Toast.makeText(this, "An error occurred while taking your photo", Toast.LENGTH_SHORT).show();
@@ -229,7 +228,9 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
             return;
         }
         updateUser();
-        startActivity(new Intent(this, SplashActivity.class));
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.putExtra("setup_complete", true);
+        startActivity(intent);
         finish();
     }
 

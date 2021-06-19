@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/parent_layout"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,30 +111,34 @@
                     android:layout_height="wrap_content">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/walk_length"
+                        android:inputType="number"
+                        android:maxLength="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <Spinner
                     android:id="@+id/walk_length_units"
+                    android:entries="@array/dog_walk_length_units"
                     android:textSize="16sp"
                     android:background="@drawable/text_input_layout_style"
                     android:popupBackground="@color/light_rose"
                     android:layout_marginEnd="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:paddingTop="22dp"
-                    android:paddingBottom="22dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/training_level_layout"
                 android:orientation="vertical"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
@@ -151,22 +157,27 @@
                     android:layout_height="wrap_content">
                     <RadioButton
                         android:id="@+id/untrained"
-                        android:text="@string/untrained"
+                        android:text="@string/untrained_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <RadioButton
                         android:id="@+id/minimally_trained"
-                        android:text="@string/minimally_trained"
+                        android:text="@string/minimally_trained_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <RadioButton
                         android:id="@+id/well_trained"
-                        android:text="@string/well_trained"
+                        android:text="@string/well_trained_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <RadioButton
                         android:id="@+id/expert_training"
-                        android:text="@string/expert_training"
+                        android:text="@string/expert_training_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <RadioButton
+                        android:id="@+id/unknown_training"
+                        android:text="@string/unknown_training"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </RadioGroup>
@@ -239,8 +250,7 @@
                 android:id="@+id/save_dog"
                 android:text="@string/save_dog"
                 style="@style/DogWalker.Button"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_margin="10dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/walker_requirements" />

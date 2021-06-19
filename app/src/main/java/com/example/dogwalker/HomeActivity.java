@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (user.isDogOwner()) {
                     if (actionBarMenu != null)
                         actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
-                    if (user.getNumberOfDogs() > 0) {
+                    if (user.getDogs().size() > 0) {
                         activeOwnerBox.setVisibility(View.VISIBLE);
                         if (user.isDogOwnerActive())
                             activeOwnerBox.setChecked(true);
@@ -76,12 +76,14 @@ public class HomeActivity extends AppCompatActivity {
 
                     }
                 }
-                if (user.isDogWalker() && (!user.isDogOwner() || user.getNumberOfDogs() > 0)) {
+                if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
                     activeWalkerBox.setVisibility(View.VISIBLE);
                     if (user.isDogWalkerActive())
                         activeWalkerBox.setChecked(true);
 
                 }
+
+
 
 
             }

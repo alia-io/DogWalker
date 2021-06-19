@@ -23,7 +23,7 @@ public class Fragment2 extends Fragment {
     private View view;
     private ImageView addProfilePicture;
     private ImageView profilePicture;
-    private Uri profilePictureUri;
+    private Uri profilePictureUri = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class Fragment2 extends Fragment {
 
     public void setProfilePicturePreview(Uri imageUri) {
         profilePictureUri = imageUri;
+        profilePicture.setBackground(null);
         Picasso.get().load(profilePictureUri.toString()).transform(new CircleTransform()).into(profilePicture);
     }
 

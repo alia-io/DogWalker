@@ -85,10 +85,15 @@
     </string-array>
 
     <!--RadioButton Text-->
-    <string name="untrained">Untrained <small>(no commands)</small></string>
-    <string name="minimally_trained">Some training <small>(few commands, sometimes listens)</small></string>
-    <string name="well_trained">Well-Trained <small>(several commands, often listens)</small></string>
-    <string name="expert_training">Expert <small>(many commands, always listens)</small></string>
+    <string name="untrained_description">Untrained <small>(no commands)</small></string>
+    <string name="minimally_trained_description">Some training <small>(few commands, sometimes listens)</small></string>
+    <string name="well_trained_description">Well Trained <small>(several commands, often listens)</small></string>
+    <string name="expert_training_description">Expert <small>(many commands, always listens)</small></string>
+    <string name="untrained">Untrained</string>
+    <string name="minimally_trained">Some training</string>
+    <string name="well_trained">Well Trained</string>
+    <string name="expert_training">Expert</string>
+    <string name="unknown_training">Unknown</string>
 
     <!--Art Credit-->
 

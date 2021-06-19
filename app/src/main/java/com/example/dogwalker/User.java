@@ -19,23 +19,22 @@ public class User {
     private String profileAboutMe;
     private Object timestamp;
 
-    private boolean dogOwner;
+    private boolean dogOwner = false;
     private Object dogOwnerExperience;  // Length of time user has owned dogs
-    private int numberOfDogs;
-    private Map<String, Boolean> dogs = new HashMap<>();
+    private Map<String, Boolean> dogs = new HashMap<>();    // dogID : true
 
-    private boolean dogWalker;
+    private boolean dogWalker = false;
     private Object dogWalkerExperience; // Length of time user has walked dogs
-    private int dogWalkerRating;
-    private int numberOfRatings;
+    private int dogWalkerRating = 0;
+    private int numberOfRatings = 0;
 
     private Map<String, String> contacts = new HashMap<>();     // userID : chatID
     private Map<String, String> otherUsers = new HashMap<>();   // userID : chatID
     private String dogWalkingLog;
 
-    private boolean dogOwnerActive;     // Currently looking for walkers
-    private boolean dogWalkerActive;    // Currently looking for walks
-    private boolean currentWalk;        // Currently on a walk
+    private boolean dogOwnerActive = false;     // Currently looking for walkers
+    private boolean dogWalkerActive = false;    // Currently looking for walks
+    private boolean currentWalk = false;        // Currently on a walk
 
     public User(String profileName, String phoneNumber, String emailAddress) {
         this.profileName = profileName;
