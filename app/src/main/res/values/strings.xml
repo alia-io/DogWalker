@@ -27,6 +27,9 @@
     <string name="set_up_instruction_2">Upload a profile picture. Other users will be more likely to trust and interact with you!</string>
     <string name="set_up_instruction_3">Tell other users a little about yourself.</string>
     <string name="edit_dogs_title">My Dogs</string>
+    <string name="training_level">Level of Training:</string>
+    <string name="health_and_needs">Relevant health information &amp; other needs:</string>
+    <string name="walker_requirements">Requirements for dog walker:</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
@@ -49,6 +52,8 @@
     <string name="name">Name</string>
     <string name="dog_breed">Breed</string>
     <string name="birth_date">Birth Date</string>
+    <string name="about">About Me</string>
+    <string name="walk_length">Average Walk Distance</string>
 
     <!--Menu Text-->
     <string name="email_verification">Resend Verification Email</string>
@@ -69,6 +74,21 @@
     <string name="dog_walker_text">I am a dog walker</string>
     <string name="active_dog_owner">Looking for Walkers</string>
     <string name="active_dog_walker">Looking for Dogs</string>
+
+    <!--Spinner Text-->
+    <string-array name="dog_walk_length_units">
+        <item>Blocks</item>
+        <item>Feet</item>
+        <item>Meters</item>
+        <item>Kilometers</item>
+        <item>Miles</item>
+    </string-array>
+
+    <!--RadioButton Text-->
+    <string name="untrained">Untrained <small>(no commands)</small></string>
+    <string name="minimally_trained">Some training <small>(few commands, sometimes listens)</small></string>
+    <string name="well_trained">Well-Trained <small>(several commands, often listens)</small></string>
+    <string name="expert_training">Expert <small>(many commands, always listens)</small></string>
 
     <!--Art Credit-->
 
