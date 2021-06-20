@@ -1,7 +1,7 @@
 package com.example.dogwalker;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,6 @@ public class Dog {
     private Object birthDate;
     private String trainingLevel;
     private String averageWalkLength;
-    private Map<String, String> infoAndHealthNeeds = new HashMap<>();   // index : text
-    private Map<String, String> walkerRequirements = new HashMap<>();   // index : text
+    private List<String> infoAndHealthNeeds = new ArrayList<>();
+    private List<String> walkerRequirements = new ArrayList<>();
 }

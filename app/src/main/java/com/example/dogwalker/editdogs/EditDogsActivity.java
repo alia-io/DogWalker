@@ -2,6 +2,8 @@ package com.example.dogwalker.editdogs;
 
 import com.example.dogwalker.Dog;
 import com.example.dogwalker.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -25,15 +27,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.util.UUID;
 
-public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, EditDogDialogListener {
+public class EditDogsActivity extends AppCompatActivity implements EditDogDialogListener, DogDetailItemListener {
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
@@ -71,7 +71,7 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new EditDogsRecyclerAdapter(this, recyclerView);
+        recyclerAdapter = new EditDogsRecyclerAdapter(this, recyclerView, getResources());
         recyclerView.setAdapter(recyclerAdapter);
     }
 
@@ -81,48 +81,29 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
         recyclerAdapter.removeListener();
     }
 
-    public void addDog(View view) {
-        editDogFragment = EditDogFragment.newInstance(R.layout.fragment_edit_dog, "",
+    public void addDog(View view) { startEditDogFragment("", "add_dog"); }
+
+    @Override
+    public void startEditDogFragment(String key, String tag) {
+        editDogFragment = EditDogFragment.newInstance(R.layout.fragment_edit_dog, key,
                 activityLayout.getHeight() - (getSupportActionBar().getHeight() * 3));
-        editDogFragment.show(getSupportFragmentManager(), "add_dog");
+        editDogFragment.show(getSupportFragmentManager(), tag);
     }
 
     @Override
-    public void onAddDogPictureButtonClick(View v) {
-        PopupMenu popupMenu = new PopupMenu(this, v);
-        MenuInflater menuInflater = popupMenu.getMenuInflater();
-        menuInflater.inflate(R.menu.menu_picture_popup, popupMenu.getMenu());
-        try {
-            popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(this.toString() + " must implement PopupMenu.OnMenuItemClickListener");
-        }
-        popupMenu.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        final int takePicture = R.id.action_take_picture;
-        final int uploadPicture = R.id.action_upload_picture;
-        switch (item.getItemId()) {
-            case takePicture:
-                takeProfilePicture();
-                return true;
-            case uploadPicture:
-                Intent intent = new Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select File"), OPEN_FILE);
-                return true;
-            default: return false;
-        }
-    }
-
-    private void takeProfilePicture() {
+    public void takeProfilePicture() {
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "We need permission to access your camera and photos", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(this,
                     new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_FOR_CAMERA);
         } else takePhoto();
+    }
+
+    @Override
+    public void uploadProfilePicture() {
+        Intent intent = new Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), OPEN_FILE);
     }
 
     @Override
@@ -187,7 +168,22 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
     }
 
     private void saveNewDogToDatabase(Dog dog) {
-        DatabaseReference allDogsRef = database.getReference("Dogs");
+        DatabaseReference userDogRef = userRef.child("dogs").push();
+        userDogRef.setValue(true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        updateDogInDatabase(userDogRef.getKey(), dog);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        /*DatabaseReference allDogsRef = database.getReference("Dogs");
         final String newDogUUID = UUID.randomUUID().toString();
         allDogsRef.child(newDogUUID).setValue(dog)
                 .addOnSuccessListener(aVoid ->
@@ -197,7 +193,7 @@ public class EditDogsActivity extends AppCompatActivity implements PopupMenu.OnM
                                 .addOnFailureListener(e ->
                                         Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()))
                 .addOnFailureListener(e ->
-                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());*/
     }
 
     private void updateDogInDatabase(String dogKey, Dog dog) {

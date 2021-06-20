@@ -3,19 +3,23 @@ package com.example.dogwalker.editdogs;
 import com.example.dogwalker.CircleTransform;
 import com.example.dogwalker.R;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -24,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,25 +40,29 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
+    private FirebaseStorage storage;
     private FirebaseDatabase database;
-    private DatabaseReference userRef;
+    private DatabaseReference currentUserRef;
     private DatabaseReference allDogsReference;
     private DatabaseReference myDogsReference;
     private ChildEventListener myDogsEventListener;
     private List<String> keyList;
+    private DogDetailItemListener listener;
     private Resources resources;
 
-    public EditDogsRecyclerAdapter(Context context, RecyclerView recyclerView) {
+    public EditDogsRecyclerAdapter(DogDetailItemListener listener, RecyclerView recyclerView, Resources resources) {
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
+        storage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("Users/" + currentUser.getUid());
+        currentUserRef = database.getReference("Users/" + currentUser.getUid());
         allDogsReference = database.getReference("Dogs");
-        myDogsReference = userRef.child("dogs");
+        myDogsReference = currentUserRef.child("dogs");
 
         keyList = new ArrayList<>();
-        resources = context.getResources();
+        this.listener = listener;
+        this.resources = resources;
 
         myDogsEventListener = myDogsReference.addChildEventListener(new ChildEventListener() {
 
@@ -88,10 +98,33 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
     @Override
     public void onBindViewHolder(@NonNull DogDetailsViewHolder holder, int position) {
 
-        DatabaseReference currentDogReference = allDogsReference.child(keyList.get(position));
+        String currentDogKey = keyList.get(position);
+        DatabaseReference currentDogReference = allDogsReference.child(currentDogKey);
 
         holder.moreButton.setVisibility(View.VISIBLE);
-        // TODO: moreButton onClick -> edit/delete
+        holder.moreButton.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+            MenuInflater menuInflater = popupMenu.getMenuInflater();
+            menuInflater.inflate(R.menu.menu_dog_details_popup, popupMenu.getMenu());
+            popupMenu.show();
+            popupMenu.setOnMenuItemClickListener(item -> {
+                final int editDogId = R.id.action_edit_dog;
+                final int removeDogId = R.id.action_remove_dog;
+                switch (item.getItemId()) {
+                    case editDogId:
+                        listener.startEditDogFragment(currentDogKey, "edit_dog");
+                        return true;
+                    case removeDogId:
+                        currentUserRef.child("dogs/" + currentDogKey).setValue(null)
+                                .addOnSuccessListener(aVoid1 ->
+                                        Toast.makeText(v.getContext(), "Your dog was removed.", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(v.getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        return true;
+                    default: return false;
+                }
+            });
+        });
 
         if (holder.profilePictureReference != null && holder.profilePictureListener != null)
             holder.profilePictureReference.removeEventListener(holder.profilePictureListener);
@@ -126,6 +159,7 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
         holder.nameReference = currentDogReference.child("name");
         holder.nameListener = holder.nameReference.addValueEventListener(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getValue() != null && snapshot.getValue().toString().length() > 0)
                 holder.name.setText(snapshot.getValue().toString());
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
@@ -252,7 +286,7 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
                 else age = age + resources.getString(R.string.months);
             }
             if (days > 0) {
-                age = age + R.string.comma + " " + days + " ";
+                age = age + resources.getString(R.string.comma) + " " + days + " ";
                 if (days == 1) age = age + resources.getString(R.string.day);
                 else age = age + resources.getString(R.string.days);
             }

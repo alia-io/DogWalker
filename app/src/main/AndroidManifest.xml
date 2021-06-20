@@ -17,12 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Activity.DogWalker">
-        <activity android:name=".editdogs.EditDogsActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
+        <activity android:name=".editdogs.EditDogsActivity"
+            android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".setupprofile.SetUpProfileActivity"
             android:theme="@style/Activity.DogWalker.Splash" />
