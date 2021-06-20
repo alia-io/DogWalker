@@ -14,10 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -74,9 +77,24 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
                         actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
                     if (user.getDogs().size() > 0) {
                         activeOwnerBox.setVisibility(View.VISIBLE);
-                        if (user.isDogOwnerActive())
-                            activeOwnerBox.setChecked(true);
-
+                        activeOwnerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            if (isChecked) {
+                                user.setDogOwnerActive(true);
+                                userRef.child("dogOwnerActive").setValue(true)
+                                        .addOnSuccessListener(aVoid ->
+                                                Toast.makeText(HomeActivity.this, "You are now actively looking for dog walkers!", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e ->
+                                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                            } else {
+                                user.setDogOwnerActive(false);
+                                userRef.child("dogOwnerActive").setValue(false)
+                                        .addOnSuccessListener(aVoid ->
+                                                Toast.makeText(HomeActivity.this, "You stopped looking for dog walkers.", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e ->
+                                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                        if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
                     } else {
                         Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
 
@@ -84,9 +102,24 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
                 }
                 if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
                     activeWalkerBox.setVisibility(View.VISIBLE);
-                    if (user.isDogWalkerActive())
-                        activeWalkerBox.setChecked(true);
-
+                    activeWalkerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            user.setDogWalkerActive(true);
+                            userRef.child("dogWalkerActive").setValue(true)
+                                    .addOnSuccessListener(aVoid ->
+                                            Toast.makeText(HomeActivity.this, "You are now actively looking for dogs to walk!", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        } else {
+                            user.setDogWalkerActive(false);
+                            userRef.child("dogWalkerActive").setValue(false)
+                                    .addOnSuccessListener(aVoid ->
+                                            Toast.makeText(HomeActivity.this, "You stopped looking for dogs to walk.", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        }
+                    });
+                    if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
                 }
 
 
