@@ -50,7 +50,6 @@
         <TextView
             android:id="@+id/instruction"
             android:text="@string/registration"
-            android:textColor="@color/dark_green"
             android:textStyle="bold"
             android:textSize="28sp"
             android:layout_marginBottom="20dp"
@@ -121,7 +120,6 @@
         <TextView
             android:text="@string/go_to_login"
             android:textSize="18sp"
-            android:textColor="@color/dark_green"
             android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

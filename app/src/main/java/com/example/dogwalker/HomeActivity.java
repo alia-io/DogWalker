@@ -1,7 +1,8 @@
 package com.example.dogwalker;
 
 import com.example.dogwalker.editdogs.EditDogsActivity;
-import com.example.dogwalker.newwalk.NewWalkFragment;
+import com.example.dogwalker.newwalk.NewWalkFragment0;
+import com.example.dogwalker.newwalk.NewWalkFragment1;
 import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
 
 import androidx.annotation.NonNull;
@@ -9,18 +10,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -97,7 +96,6 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
                         if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
                     } else {
                         Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
-
                     }
                 }
                 if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
@@ -132,18 +130,24 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
 
     public void startNewWalk(View view) {
         if (user.isDogOwner() && user.isDogWalker()) {
-            NewWalkFragment.newInstance(R.layout.fragment_new_walk, true, false).show(getSupportFragmentManager(), "new_walk");
+            NewWalkFragment0.newInstance(R.layout.fragment_new_walk_0).show(getSupportFragmentManager(), "new_walk");
             return;
-        } else if (user.isDogOwner()) setFindDogWalkers(true);
-        else setFindDogWalkers(false);
-        NewWalkFragment.newInstance(R.layout.fragment_new_walk, false, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+        } else findDogWalkers = user.isDogOwner();
+        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
     }
 
     @Override
-    public void setFindDogWalkers(boolean findDogWalkers) { this.findDogWalkers = findDogWalkers; }
+    public void setFindDogWalkers(boolean findDogWalkers) {
+        this.findDogWalkers = findDogWalkers;
+        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+    }
 
     @Override
-    public void setFromContacts(boolean fromContacts) { this.fromContacts = fromContacts; }
+    public void setFromContacts(boolean fromContacts) {
+        this.fromContacts = fromContacts;
+        Log.d("frags", "findDogWalkers = " + this.findDogWalkers + ", fromContacts = " + this.fromContacts);
+        // TODO: start next activity
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

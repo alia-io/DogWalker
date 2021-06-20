@@ -51,12 +51,7 @@
         android:id="@+id/add_dog_button"
         android:text="@string/add_dog"
         android:onClick="addDog"
-        android:textColor="@color/light_green"
-        android:textSize="24sp"
-        android:textAllCaps="false"
-        android:background="@drawable/button_style"
+        style="@style/DogWalker.Button.Large"
         tools:ignore="UsingOnClickInXml"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

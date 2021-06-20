@@ -93,12 +93,7 @@
         android:id="@+id/walk_button"
         android:text="@string/start_walk"
         android:onClick="startNewWalk"
-        android:textColor="@color/light_green"
-        android:textSize="16sp"
-        android:textAllCaps="false"
-        android:background="@drawable/button_style"
+        style="@style/DogWalker.Button.Large"
         tools:ignore="UsingOnClickInXml"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
