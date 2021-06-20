@@ -34,6 +34,9 @@
     <string name="dog_walk_length_title">Average Walk Length:</string>
     <string name="dog_needs_title">Health &amp; Other Needs:</string>
     <string name="dog_requirements_title">Walker Requirements:</string>
+    <string name="new_walk_fragment_0_title">Are you looking for a dog walker or a dog owner?</string>
+    <string name="new_walk_fragment_1_title_walker">Find a dog walker where?</string>
+    <string name="new_walk_fragment_1_title_owner">Find a dog owner where?</string>
 
     <string name="comma">,</string>
     <string name="no_answer">N/A</string>
@@ -113,6 +116,11 @@
     <string name="well_trained">Well Trained</string>
     <string name="expert_training">Expert</string>
     <string name="unknown_training">Unknown</string>
+    <string name="dog_walker">Dog Walker</string>
+    <string name="dog_owner">Dog Owner</string>
+    <string name="from_contacts">From your contacts</string>
+    <string name="from_owners_search">From active dog owners nearby</string>
+    <string name="from_walkers_search">From active dog walkers nearby</string>
 
     <!--Art Credit-->
 

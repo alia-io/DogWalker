@@ -1,5 +1,9 @@
 package com.example.dogwalker;
 
+import com.example.dogwalker.editdogs.EditDogsActivity;
+import com.example.dogwalker.newwalk.NewWalkFragment;
+import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dogwalker.editdogs.EditDogsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTracker {
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
@@ -32,6 +35,9 @@ public class HomeActivity extends AppCompatActivity {
     private DatabaseReference userRef;
 
     private User user;
+
+    private boolean findDogWalkers;
+    private boolean fromContacts;
 
     private Menu actionBarMenu;
     private ImageView profilePicture;
@@ -90,6 +96,21 @@ public class HomeActivity extends AppCompatActivity {
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
+
+    public void startNewWalk(View view) {
+        if (user.isDogOwner() && user.isDogWalker()) {
+            NewWalkFragment.newInstance(R.layout.fragment_new_walk, true, false).show(getSupportFragmentManager(), "new_walk");
+            return;
+        } else if (user.isDogOwner()) setFindDogWalkers(true);
+        else setFindDogWalkers(false);
+        NewWalkFragment.newInstance(R.layout.fragment_new_walk, false, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+    }
+
+    @Override
+    public void setFindDogWalkers(boolean findDogWalkers) { this.findDogWalkers = findDogWalkers; }
+
+    @Override
+    public void setFromContacts(boolean fromContacts) { this.fromContacts = fromContacts; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -247,14 +247,19 @@
                         android:layout_alignParentEnd="true" />
                 </RelativeLayout>
             </LinearLayout>
-            <Button
-                android:id="@+id/save_dog"
-                android:text="@string/save_dog"
-                style="@style/DogWalker.Button"
-                android:layout_margin="10dp"
-                app:layout_constraintRight_toRightOf="parent"
+            <FrameLayout
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/walker_requirements" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/walker_requirements">
+                <Button
+                    android:id="@+id/save_dog"
+                    android:text="@string/save_dog"
+                    style="@style/DogWalker.Button" />
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </FrameLayout>

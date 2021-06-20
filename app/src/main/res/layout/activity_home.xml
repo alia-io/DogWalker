@@ -40,7 +40,9 @@
     </androidx.appcompat.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/user_profile_layout"
-        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -90,10 +92,12 @@
     <Button
         android:id="@+id/walk_button"
         android:text="@string/start_walk"
+        android:onClick="startNewWalk"
         android:textColor="@color/light_green"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:background="@drawable/button_style"
+        tools:ignore="UsingOnClickInXml"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent" />
