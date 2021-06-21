@@ -1,19 +1,13 @@
 package com.example.dogwalker.editdogs;
 
 import com.example.dogwalker.Dog;
+import com.example.dogwalker.LocationUpdatingAppCompatActivity;
 import com.example.dogwalker.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,19 +21,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.UUID;
 
-public class EditDogsActivity extends AppCompatActivity implements EditDogDialogListener, DogDetailItemListener {
-
-    private FirebaseAuth auth;
-    private FirebaseUser currentUser;
-    private FirebaseDatabase database;
-    private DatabaseReference userRef;
-    private FirebaseStorage storage;
+public class EditDogsActivity extends LocationUpdatingAppCompatActivity implements EditDogDialogListener, DogDetailItemListener {
 
     private ConstraintLayout activityLayout;
     private EditDogFragment editDogFragment;
@@ -47,24 +34,17 @@ public class EditDogsActivity extends AppCompatActivity implements EditDogDialog
 
     private EditDogsRecyclerAdapter recyclerAdapter;
 
-    private static final int REQUEST_FOR_CAMERA = 0011;
-    private static final int OPEN_FILE = 0012;
+    private static final int REQUEST_FOR_CAMERA = 0012;
+    private static final int REQUEST_FOR_FILE = 0013;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dogs);
 
-        auth = FirebaseAuth.getInstance();
-        currentUser = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("Users/" + currentUser.getUid());
-        storage = FirebaseStorage.getInstance();
-
-        activityLayout = findViewById(R.id.layout_parent);
-
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activityLayout = findViewById(R.id.layout_parent);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -103,7 +83,7 @@ public class EditDogsActivity extends AppCompatActivity implements EditDogDialog
     @Override
     public void uploadProfilePicture() {
         Intent intent = new Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select File"), OPEN_FILE);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_FOR_FILE);
     }
 
     @Override
@@ -139,7 +119,7 @@ public class EditDogsActivity extends AppCompatActivity implements EditDogDialog
                 editDogFragment.setProfilePicturePreview(uri);
                 uri = null;
             }
-        } else if (requestCode == OPEN_FILE && resultCode == RESULT_OK) {
+        } else if (requestCode == REQUEST_FOR_FILE && resultCode == RESULT_OK) {
             editDogFragment.setProfilePicturePreview(data.getData());
         }
     }
@@ -170,30 +150,10 @@ public class EditDogsActivity extends AppCompatActivity implements EditDogDialog
     private void saveNewDogToDatabase(Dog dog) {
         DatabaseReference userDogRef = userRef.child("dogs").push();
         userDogRef.setValue(true)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        updateDogInDatabase(userDogRef.getKey(), dog);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        /*DatabaseReference allDogsRef = database.getReference("Dogs");
-        final String newDogUUID = UUID.randomUUID().toString();
-        allDogsRef.child(newDogUUID).setValue(dog)
                 .addOnSuccessListener(aVoid ->
-                        userRef.child("dogs").child(newDogUUID).setValue(true)
-                                .addOnSuccessListener(aVoid1 ->
-                                        Toast.makeText(EditDogsActivity.this, "Your dog's profile was added!", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e ->
-                                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()))
+                        updateDogInDatabase(userDogRef.getKey(), dog))
                 .addOnFailureListener(e ->
-                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());*/
+                        Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void updateDogInDatabase(String dogKey, Dog dog) {

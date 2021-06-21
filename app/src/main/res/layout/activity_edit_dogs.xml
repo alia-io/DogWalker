@@ -53,5 +53,7 @@
         android:onClick="addDog"
         style="@style/DogWalker.Button.Large"
         tools:ignore="UsingOnClickInXml"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

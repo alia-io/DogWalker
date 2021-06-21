@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private boolean finishActivity;
+    private boolean exitApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class SplashActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
 
         finishActivity = getIntent().getBooleanExtra("finish", false);
+        exitApp = getIntent().getBooleanExtra("exit", false);
 
         int[] welcomeMessages = { R.string.welcome_1, R.string.welcome_2, R.string.welcome_3, R.string.welcome_4, R.string.welcome_5,
                 R.string.welcome_6, R.string.welcome_7, R.string.welcome_8, R.string.welcome_9, R.string.welcome_10 };
@@ -44,9 +46,12 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (exitApp) return;
         new CountDownTimer(3000, 1000) {
             @Override public void onTick(long millisUntilFinished) { }
             @Override public void onFinish() {
+                //if (exitApp) finishAndRemoveTask();
+                //if (exitApp) finishAffinity();
                 if (currentUser == null) // No user found
                     signUpActivity();
                 else if (currentUser.isEmailVerified()) // User found and verified

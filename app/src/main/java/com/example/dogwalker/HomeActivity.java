@@ -6,11 +6,9 @@ import com.example.dogwalker.newwalk.NewWalkFragment1;
 import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,27 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.dogwalker.search.SearchActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTracker {
-
-    private FirebaseAuth auth;
-    private FirebaseUser currentUser;
-    private FirebaseDatabase database;
-    private DatabaseReference userRef;
+public class HomeActivity extends LocationUpdatingAppCompatActivity implements NewWalkFragmentTracker {
 
     private User user;
-
     private boolean findDogWalkers;
-    private boolean fromContacts;
-
     private Menu actionBarMenu;
     private ImageView profilePicture;
     private TextView displayName;
@@ -49,14 +36,10 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setSupportActionBar(findViewById(R.id.toolbar));
-
-        auth = FirebaseAuth.getInstance();
-        currentUser = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("Users/" + currentUser.getUid());
 
         profilePicture = findViewById(R.id.user_profile_picture);
         displayName = findViewById(R.id.user_display_name);
@@ -75,78 +58,24 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
                     if (actionBarMenu != null)
                         actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
                     if (user.getDogs().size() > 0) {
+                        setActiveOwnerOnClick();
                         activeOwnerBox.setVisibility(View.VISIBLE);
-                        activeOwnerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            if (isChecked) {
-                                user.setDogOwnerActive(true);
-                                userRef.child("dogOwnerActive").setValue(true)
-                                        .addOnSuccessListener(aVoid ->
-                                                Toast.makeText(HomeActivity.this, "You are now actively looking for dog walkers!", Toast.LENGTH_SHORT).show())
-                                        .addOnFailureListener(e ->
-                                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                            } else {
-                                user.setDogOwnerActive(false);
-                                userRef.child("dogOwnerActive").setValue(false)
-                                        .addOnSuccessListener(aVoid ->
-                                                Toast.makeText(HomeActivity.this, "You stopped looking for dog walkers.", Toast.LENGTH_SHORT).show())
-                                        .addOnFailureListener(e ->
-                                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                            }
-                        });
                         if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
                     } else {
                         Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
+                    setActiveWalkerOnClick();
                     activeWalkerBox.setVisibility(View.VISIBLE);
-                    activeWalkerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (isChecked) {
-                            user.setDogWalkerActive(true);
-                            userRef.child("dogWalkerActive").setValue(true)
-                                    .addOnSuccessListener(aVoid ->
-                                            Toast.makeText(HomeActivity.this, "You are now actively looking for dogs to walk!", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                        } else {
-                            user.setDogWalkerActive(false);
-                            userRef.child("dogWalkerActive").setValue(false)
-                                    .addOnSuccessListener(aVoid ->
-                                            Toast.makeText(HomeActivity.this, "You stopped looking for dogs to walk.", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                        }
-                    });
                     if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
                 }
 
-
-
+                // TODO: set up the rest of the home page
 
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
-    }
-
-    public void startNewWalk(View view) {
-        if (user.isDogOwner() && user.isDogWalker()) {
-            NewWalkFragment0.newInstance(R.layout.fragment_new_walk_0).show(getSupportFragmentManager(), "new_walk");
-            return;
-        } else findDogWalkers = user.isDogOwner();
-        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
-    }
-
-    @Override
-    public void setFindDogWalkers(boolean findDogWalkers) {
-        this.findDogWalkers = findDogWalkers;
-        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
-    }
-
-    @Override
-    public void setFromContacts(boolean fromContacts) {
-        this.fromContacts = fromContacts;
-        Log.d("frags", "findDogWalkers = " + this.findDogWalkers + ", fromContacts = " + this.fromContacts);
-        // TODO: start next activity
     }
 
     @Override
@@ -181,7 +110,9 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
                 startActivity(new Intent(this, EditDogsActivity.class));
                 return true;
             case searchUsersId:
-
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.putExtra("find_walk", "none");
+                startActivity(intent);
                 return true;
             case viewContactsId:
 
@@ -190,10 +121,78 @@ public class HomeActivity extends AppCompatActivity implements NewWalkFragmentTr
 
                 return true;
             case logoutId:
-
+                auth.signOut();
+                startActivity(new Intent(this, SplashActivity.class));
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void startNewWalk(View view) {
+        if (user.isDogOwner() && user.isDogWalker()) {
+            NewWalkFragment0.newInstance(R.layout.fragment_new_walk_0).show(getSupportFragmentManager(), "new_walk");
+            return;
+        } else findDogWalkers = user.isDogOwner();
+        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+    }
+
+    @Override
+    public void setFindDogWalkers(boolean findDogWalkers) {
+        this.findDogWalkers = findDogWalkers;
+        NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+    }
+
+    @Override
+    public void setFromContacts(boolean fromContacts) {
+        if (fromContacts) {
+            // TODO: start contacts activity - filter by dogWalkers or dogOwners based on "findDogWalkers"
+        } else {
+            Intent intent = new Intent(this, SearchActivity.class);
+            if (findDogWalkers) intent.putExtra("find_walk", "walkers");
+            else intent.putExtra("find_walk", "owners");
+            startActivity(intent);
+        }
+    }
+
+    private void setActiveOwnerOnClick() {
+        activeOwnerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                user.setDogOwnerActive(true);
+                userRef.child("dogOwnerActive").setValue(true)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(HomeActivity.this, "You are now actively looking for dog walkers!", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                user.setDogOwnerActive(false);
+                userRef.child("dogOwnerActive").setValue(false)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(HomeActivity.this, "You stopped looking for dog walkers.", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void setActiveWalkerOnClick() {
+        activeWalkerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                user.setDogWalkerActive(true);
+                userRef.child("dogWalkerActive").setValue(true)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(HomeActivity.this, "You are now actively looking for dogs to walk!", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                user.setDogWalkerActive(false);
+                userRef.child("dogWalkerActive").setValue(false)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(HomeActivity.this, "You stopped looking for dogs to walk.", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }

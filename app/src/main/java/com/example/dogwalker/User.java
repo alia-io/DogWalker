@@ -36,6 +36,9 @@ public class User {
     private boolean dogWalkerActive = false;    // Currently looking for walks
     private boolean currentWalk = false;        // Currently on a walk
 
+    private String latitude;
+    private String longitude;
+
     public User(String profileName, String phoneNumber, String emailAddress) {
         this.profileName = profileName;
         this.phoneNumber = phoneNumber;

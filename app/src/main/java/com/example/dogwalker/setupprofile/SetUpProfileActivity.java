@@ -62,8 +62,8 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
     private ImageView rightArrow;
     private GestureDetectorCompat gestureDetector;
 
-    private static final int REQUEST_FOR_CAMERA = 0011;
-    private static final int OPEN_FILE = 0012;
+    private static final int REQUEST_FOR_CAMERA = 0012;
+    private static final int REQUEST_FOR_FILE = 0013;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +169,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
                 return true;
             case uploadPicture:
                 Intent intent = new Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select File"), OPEN_FILE);
+                startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_FOR_FILE);
                 return true;
             default: return false;
         }
@@ -217,7 +217,7 @@ public class SetUpProfileActivity extends AppCompatActivity implements FragmentT
                 fragment2.setProfilePicturePreview(uri);
                 uri = null;
             }
-        } else if (requestCode == OPEN_FILE && resultCode == RESULT_OK) {
+        } else if (requestCode == REQUEST_FOR_FILE && resultCode == RESULT_OK) {
             fragment2.setProfilePicturePreview(data.getData());
         }
     }
