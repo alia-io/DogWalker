@@ -13,12 +13,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dogwalker.search.SearchActivity;
+import com.example.dogwalker.search.SearchUsersActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -27,6 +28,7 @@ import com.squareup.picasso.Picasso;
 public class HomeActivity extends LocationUpdatingAppCompatActivity implements NewWalkFragmentTracker {
 
     private User user;
+    private boolean userEnabled;
     private boolean findDogWalkers;
     private Menu actionBarMenu;
     private ImageView profilePicture;
@@ -55,17 +57,19 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
                     Picasso.get().load(user.getProfilePicture()).transform(new CircleTransform()).into(profilePicture);
                 }
                 if (user.isDogOwner()) {
-                    if (actionBarMenu != null)
-                        actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
+                    actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
                     if (user.getDogs().size() > 0) {
+                        setUserEnabled();
                         setActiveOwnerOnClick();
                         activeOwnerBox.setVisibility(View.VISIBLE);
                         if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
                     } else {
+                        setUserNotEnabled();
                         Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
                     }
-                }
+                } else actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(false);
                 if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
+                    setUserEnabled();
                     setActiveWalkerOnClick();
                     activeWalkerBox.setVisibility(View.VISIBLE);
                     if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
@@ -83,9 +87,25 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar_home, menu);
         actionBarMenu = menu;
-        if (user != null && user.isDogOwner())
-            actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
         return true;
+    }
+
+    private void setUserEnabled() {
+        userEnabled = true;
+        actionBarMenu.findItem(R.id.action_view_messages).setVisible(true);
+        actionBarMenu.findItem(R.id.action_search_users).setVisible(true);
+        actionBarMenu.findItem(R.id.action_view_contacts).setVisible(true);
+        actionBarMenu.findItem(R.id.action_view_log).setVisible(true);
+        ((Button) findViewById(R.id.walk_button)).setEnabled(true);
+    }
+
+    private void setUserNotEnabled() {
+        userEnabled = false;
+        actionBarMenu.findItem(R.id.action_view_messages).setVisible(false);
+        actionBarMenu.findItem(R.id.action_search_users).setVisible(false);
+        actionBarMenu.findItem(R.id.action_view_contacts).setVisible(false);
+        actionBarMenu.findItem(R.id.action_view_log).setVisible(false);
+        ((Button) findViewById(R.id.walk_button)).setEnabled(false);
     }
 
     @Override
@@ -118,7 +138,7 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
                 startActivity(new Intent(this, EditDogsActivity.class));
                 return true;
             case searchUsersId:
-                Intent intent = new Intent(this, SearchActivity.class);
+                Intent intent = new Intent(this, SearchUsersActivity.class);
                 intent.putExtra("find_walk", "none");
                 startActivity(intent);
                 return true;
@@ -157,7 +177,7 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
         if (fromContacts) {
             // TODO: start contacts activity - filter by dogWalkers or dogOwners based on "findDogWalkers"
         } else {
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, SearchUsersActivity.class);
             if (findDogWalkers) intent.putExtra("find_walk", "walkers");
             else intent.putExtra("find_walk", "owners");
             startActivity(intent);

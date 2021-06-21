@@ -69,7 +69,8 @@ public class NewWalkFragment1 extends DialogFragment {
         radioGroup = view.findViewById(R.id.radio_group);
         radioButton = view.findViewById(R.id.from_nearby);
 
-        return builder.setView(view).setPositiveButton("Continue", (dialog, which) -> onContinueClicked())
+        return builder.setView(view).setTitle(R.string.start_walk).setIcon(R.drawable.dog_walker)
+                .setPositiveButton("Continue", (dialog, which) -> onContinueClicked())
                 .setNegativeButton("Cancel", (dialog, which) -> dismiss()).create();
     }
 

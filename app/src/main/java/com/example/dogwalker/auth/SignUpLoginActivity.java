@@ -4,10 +4,13 @@ import com.example.dogwalker.R;
 import com.example.dogwalker.SplashActivity;
 import com.example.dogwalker.User;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,16 +21,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignUpLoginActivity extends AppCompatActivity implements AuthActionDialogListener {
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
+    private FirebaseDatabase database;
     private TextView instructionText;
     private LinearLayout bottomLayout;
     private TextInputLayout profileNameLayout, phoneNumberLayout;
@@ -45,6 +56,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
 
         instructionText = findViewById(R.id.instruction);
         bottomLayout = findViewById(R.id.bottom_layout);
@@ -124,10 +136,21 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
     }
 
     private void saveUserToDatabase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("Users");
-        usersRef.child(currentUser.getUid()).setValue(new User(profileName.getText().toString(),
-                phoneNumber.getText().toString(), emailAddress.getText().toString()));
+        String userId = currentUser.getUid();
+        String name = profileName.getText().toString();
+        database.getReference("Users/" + userId)
+                .setValue(new User(name, phoneNumber.getText().toString(), emailAddress.getText().toString()))
+                .addOnSuccessListener(aVoid ->
+                        database.getReference("Names/" + name).runTransaction(new Transaction.Handler() {
+                            @NonNull @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                currentData.child(String.valueOf(currentData.getChildrenCount())).setValue(userId);
+                                return Transaction.success(currentData);
+                            }
+                            @Override public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) { }
+                        }))
+                .addOnFailureListener(e ->
+                        Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     public void goToLogin(View view) {

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.SearchActivity">
+    tools:context=".search.SearchUsersActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:background="@drawable/toolbar"
@@ -119,7 +119,6 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:background="@color/light_gray"
