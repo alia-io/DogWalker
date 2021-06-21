@@ -88,6 +88,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/user_profile_layout" />
 
+    <!--TODO: -->
 
     <Button
         android:id="@+id/walk_button"

@@ -91,7 +91,9 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        final int editAccountId = R.id.action_edit_account;
         final int viewProfileId = R.id.action_view_profile;
+        final int viewMessagesId = R.id.action_view_messages;
         final int editProfileId = R.id.action_edit_profile;
         final int editDogsId = R.id.action_edit_dogs;
         final int searchUsersId = R.id.action_search_users;
@@ -100,11 +102,17 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
         final int logoutId = R.id.action_logout;
 
         switch (item.getItemId()) {
+            case editAccountId:
+                // TODO
+                return true;
             case viewProfileId:
-
+                // TODO
+                return true;
+            case viewMessagesId:
+                // TODO
                 return true;
             case editProfileId:
-
+                // TODO
                 return true;
             case editDogsId:
                 startActivity(new Intent(this, EditDogsActivity.class));
@@ -115,10 +123,10 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
                 startActivity(intent);
                 return true;
             case viewContactsId:
-
+                // TODO
                 return true;
             case viewLogId:
-
+                // TODO
                 return true;
             case logoutId:
                 auth.signOut();

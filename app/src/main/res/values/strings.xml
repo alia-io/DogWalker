@@ -24,6 +24,7 @@
     <string name="set_up_instruction_2">Upload a profile picture. Other users will be more likely to trust and interact with you!</string>
     <string name="set_up_instruction_3">Tell other users a little about yourself.</string>
     <string name="edit_dogs_title">My Dogs</string>
+    <string name="no_answer">N/A</string>
     <string name="training_level">Level of Training:</string>
     <string name="health_and_needs">Relevant health information &amp; other needs:</string>
     <string name="walker_requirements">Requirements for dog walker:</string>
@@ -37,9 +38,9 @@
     <string name="new_walk_fragment_0_title">Are you looking for a dog walker or a dog owner?</string>
     <string name="new_walk_fragment_1_title_walker">Find a dog walker where?</string>
     <string name="new_walk_fragment_1_title_owner">Find a dog owner where?</string>
-
-    <string name="comma">,</string>
-    <string name="no_answer">N/A</string>
+    <string name="search_filter_1">Search For:</string>
+    <string name="search_filter_2">Distance:</string>
+    <string name="search_no_results">No users found.</string>
 
     <!--Dates-->
     <string name="day">day</string>
@@ -50,6 +51,7 @@
     <string name="years">years</string>
     <string name="months_comma">months,</string>
     <string name="years_comma">years,</string>
+    <string name="comma">,</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
@@ -81,10 +83,12 @@
     <string name="new_account">Create New Account</string>
     <string name="take_picture">Take New Picture</string>
     <string name="upload_picture">Upload Picture</string>
-    <string name="view_profile">View Profile</string>
+    <string name="edit_account">My Account</string>
+    <string name="view_profile">My Profile</string>
+    <string name="view_messages">My Messages</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_dogs">Edit Dogs</string>
-    <string name="find_users">Find Local Dog Lovers</string>
+    <string name="find_users">Search Dog Lovers</string>
     <string name="view_contacts">View Contacts</string>
     <string name="view_walk_activity">View Walk Activity</string>
     <string name="logout">Logout</string>
@@ -95,8 +99,9 @@
     <!--CheckBox Text-->
     <string name="dog_owner_text">I am a dog owner</string>
     <string name="dog_walker_text">I am a dog walker</string>
-    <string name="active_dog_owner">Looking for Walkers</string>
-    <string name="active_dog_walker">Looking for Dogs</string>
+    <string name="active_dog_owner">Looking for Dog Walkers</string>
+    <string name="active_dog_walker">Looking for Dogs to Walk</string>
+    <string name="active_users_only">Active Users Only</string>
 
     <!--Spinner Text-->
     <string-array name="dog_walk_length_units">
@@ -122,6 +127,11 @@
     <string name="from_contacts">From your contacts</string>
     <string name="from_owners_search">From active dog owners nearby</string>
     <string name="from_walkers_search">From active dog walkers nearby</string>
+    <string name="dog_owners">Dog Owners</string>
+    <string name="dog_walkers">Dog Walkers</string>
+    <string name="both">Both</string>
+    <string name="nearby">Nearby</string>
+    <string name="anywhere">Anywhere</string>
 
     <!--Art Credit-->
 
