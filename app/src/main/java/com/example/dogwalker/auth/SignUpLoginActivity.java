@@ -140,15 +140,19 @@ public class SignUpLoginActivity extends AppCompatActivity implements AuthAction
         String name = profileName.getText().toString();
         database.getReference("Users/" + userId)
                 .setValue(new User(name, phoneNumber.getText().toString(), emailAddress.getText().toString()))
-                .addOnSuccessListener(aVoid ->
-                        database.getReference("Names/" + name).runTransaction(new Transaction.Handler() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        /*database.getReference("Names/" + name).runTransaction(new Transaction.Handler() {
                             @NonNull @Override
                             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                                 currentData.child(String.valueOf(currentData.getChildrenCount())).setValue(userId);
                                 return Transaction.success(currentData);
                             }
                             @Override public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) { }
-                        }))
+                        }))*/
+                    }
+                })
                 .addOnFailureListener(e ->
                         Toast.makeText(SignUpLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }

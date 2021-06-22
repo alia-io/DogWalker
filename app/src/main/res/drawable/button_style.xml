@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp" >
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/transparent"
                 android:endColor="@color/lilac_gray"
@@ -10,7 +10,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp">
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/lilac_gray"
                 android:endColor="@color/transparent"
@@ -19,7 +19,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp">
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/lilac_gray"
                 android:endColor="@color/transparent"
@@ -28,7 +28,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp">
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/lilac_gray"
                 android:endColor="@color/transparent"
@@ -37,7 +37,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp">
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/lilac_gray"
                 android:endColor="@color/transparent"
@@ -46,7 +46,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp">
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/lilac_gray"
                 android:endColor="@color/transparent"
@@ -55,7 +55,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp" >
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/transparent"
                 android:endColor="@color/lilac_gray"
@@ -64,7 +64,7 @@
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle" android:innerRadius="50dp" >
+        <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <gradient android:startColor="@color/transparent"
                 android:endColor="@color/lilac_gray"

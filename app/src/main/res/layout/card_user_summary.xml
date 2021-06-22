@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:cardBackgroundColor="@color/light_rose"
+    tools:cardCornerRadius="10dp"
+    tools:cardElevation="5dp"
+    tools:cardUseCompatPadding="true"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/user_profile_picture"
+            android:src="@drawable/user_default_picture"
+            android:layout_margin="5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+        <FrameLayout
+            android:id="@+id/active_user"
+            android:background="@drawable/active_background"
+            android:padding="5dp"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/user_profile_picture"
+            app:layout_constraintRight_toRightOf="@id/user_profile_picture"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_picture">
+            <TextView
+                android:text="@string/active"
+                android:textStyle="bold"
+                android:textColor="@color/off_white"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+        <ImageView
+            android:id="@+id/request_walk_button"
+            android:src="@drawable/request_walk"
+            android:layout_marginEnd="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/user_profile_picture"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_picture" />
+        <TextView
+            android:id="@+id/user_name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintTop_toTopOf="@id/user_profile_picture"
+            app:layout_constraintRight_toLeftOf="@id/request_walk_button"
+            app:layout_constraintLeft_toRightOf="@id/user_profile_picture" />
+        <LinearLayout
+            android:id="@+id/user_type"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/user_profile_picture"
+            app:layout_constraintRight_toLeftOf="@id/request_walk_button"
+            app:layout_constraintTop_toBottomOf="@id/user_name">
+            <TextView
+                android:id="@+id/dog_owner"
+                android:text="@string/dog_owner"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/reddish_purple"
+                android:visibility="gone"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/dog_walker"
+                android:text="@string/dog_walker"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/reddish_purple"
+                android:visibility="gone"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_type"
+            app:layout_constraintLeft_toRightOf="@id/user_profile_picture"
+            app:layout_constraintRight_toLeftOf="@id/request_walk_button">
+            <ImageView
+                android:id="@+id/dog_picture_1"
+                android:src="@drawable/dog_default_picture"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <ImageView
+                android:id="@+id/dog_picture_2"
+                android:src="@drawable/dog_default_picture"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <ImageView
+                android:id="@+id/dog_picture_3"
+                android:src="@drawable/dog_default_picture"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <ImageView
+                android:id="@+id/dog_picture_4"
+                android:src="@drawable/dog_default_picture"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <ImageView
+                android:id="@+id/dog_picture_5"
+                android:src="@drawable/dog_default_picture"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

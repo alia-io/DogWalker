@@ -76,8 +76,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <RadioButton
-                    android:id="@+id/both"
-                    android:text="@string/both"
+                    android:id="@+id/either"
+                    android:text="@string/either"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </RadioGroup>

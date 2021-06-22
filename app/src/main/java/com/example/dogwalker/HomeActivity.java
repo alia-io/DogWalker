@@ -28,7 +28,6 @@ import com.squareup.picasso.Picasso;
 public class HomeActivity extends LocationUpdatingAppCompatActivity implements NewWalkFragmentTracker {
 
     private User user;
-    private boolean userEnabled;
     private boolean findDogWalkers;
     private Menu actionBarMenu;
     private ImageView profilePicture;
@@ -38,7 +37,6 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -47,7 +45,11 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
         displayName = findViewById(R.id.user_display_name);
         activeOwnerBox = findViewById(R.id.looking_for_walkers);
         activeWalkerBox = findViewById(R.id.looking_for_dogs);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -56,23 +58,25 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
                 if (user.getProfilePicture() != null) {
                     Picasso.get().load(user.getProfilePicture()).transform(new CircleTransform()).into(profilePicture);
                 }
-                if (user.isDogOwner()) {
-                    actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
-                    if (user.getDogs().size() > 0) {
+                if (actionBarMenu != null) {
+                    if (user.isDogOwner()) {
+                        actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
+                        if (user.getDogs().size() > 0) {
+                            setUserEnabled();
+                            setActiveOwnerOnClick();
+                            activeOwnerBox.setVisibility(View.VISIBLE);
+                            if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
+                        } else {
+                            setUserNotEnabled();
+                            Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(false);
+                    if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
                         setUserEnabled();
-                        setActiveOwnerOnClick();
-                        activeOwnerBox.setVisibility(View.VISIBLE);
-                        if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
-                    } else {
-                        setUserNotEnabled();
-                        Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
+                        setActiveWalkerOnClick();
+                        activeWalkerBox.setVisibility(View.VISIBLE);
+                        if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
                     }
-                } else actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(false);
-                if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
-                    setUserEnabled();
-                    setActiveWalkerOnClick();
-                    activeWalkerBox.setVisibility(View.VISIBLE);
-                    if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
                 }
 
                 // TODO: set up the rest of the home page
@@ -87,11 +91,30 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar_home, menu);
         actionBarMenu = menu;
+        if (user != null) {
+            if (user.isDogOwner()) {
+                actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
+                if (user.getDogs().size() > 0) {
+                    setUserEnabled();
+                    setActiveOwnerOnClick();
+                    activeOwnerBox.setVisibility(View.VISIBLE);
+                    if (user.isDogOwnerActive()) activeOwnerBox.setChecked(true);
+                } else {
+                    setUserNotEnabled();
+                    Toast.makeText(HomeActivity.this, "Welcome! Please add your dogs to your profile to begin.", Toast.LENGTH_SHORT).show();
+                }
+            } else actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(false);
+            if (user.isDogWalker() && (!user.isDogOwner() || user.getDogs().size() > 0)) {
+                setUserEnabled();
+                setActiveWalkerOnClick();
+                activeWalkerBox.setVisibility(View.VISIBLE);
+                if (user.isDogWalkerActive()) activeWalkerBox.setChecked(true);
+            }
+        }
         return true;
     }
 
     private void setUserEnabled() {
-        userEnabled = true;
         actionBarMenu.findItem(R.id.action_view_messages).setVisible(true);
         actionBarMenu.findItem(R.id.action_search_users).setVisible(true);
         actionBarMenu.findItem(R.id.action_view_contacts).setVisible(true);
@@ -100,7 +123,6 @@ public class HomeActivity extends LocationUpdatingAppCompatActivity implements N
     }
 
     private void setUserNotEnabled() {
-        userEnabled = false;
         actionBarMenu.findItem(R.id.action_view_messages).setVisible(false);
         actionBarMenu.findItem(R.id.action_search_users).setVisible(false);
         actionBarMenu.findItem(R.id.action_view_contacts).setVisible(false);

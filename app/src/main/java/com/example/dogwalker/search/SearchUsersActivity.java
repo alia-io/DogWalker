@@ -34,7 +34,7 @@ public class SearchUsersActivity extends LocationUpdatingAppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
-        userRecyclerAdapter = new UserRecyclerAdapter(recyclerView, currentUser, database, storage);
+        userRecyclerAdapter = new UserRecyclerAdapter(recyclerView, currentUser, database, storage, geoQuery);
         recyclerView.setAdapter(userRecyclerAdapter);
 
         ((RadioGroup) findViewById(R.id.user_type)).setOnCheckedChangeListener(this::setUserTypeOnCheckedChangeListener);
@@ -50,31 +50,33 @@ public class SearchUsersActivity extends LocationUpdatingAppCompatActivity {
             ((RadioButton) findViewById(R.id.dog_owners)).setChecked(true);
             ((RadioButton) findViewById(R.id.nearby)).setChecked(true);
             ((CheckBox) findViewById(R.id.active_users)).setChecked(true);
+        } else {
+
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        userRecyclerAdapter.removeListener();
+    protected void setGeoQuery(Location location) {
+        super.setGeoQuery(location);
+        userRecyclerAdapter.setLocationListener();
     }
 
     private void setUserTypeOnCheckedChangeListener(RadioGroup group, int checkedId) {
         final int dogOwnersId = R.id.dog_owners;
         final int dogWalkersId = R.id.dog_walkers;
-        final int bothId = R.id.both;
+        final int eitherId = R.id.either;
         switch (checkedId) {
             case dogOwnersId:
-                // TODO: filter in dog owners; filter out dog walkers
                 Toast.makeText(this, "Dog Owners", Toast.LENGTH_SHORT).show();
+                userRecyclerAdapter.setUserType(Filters.UserType.DOG_OWNERS);
                 break;
             case dogWalkersId:
-                // TODO: filter in dog walkers; filter out dog owners
                 Toast.makeText(this, "Dog Walkers", Toast.LENGTH_SHORT).show();
+                userRecyclerAdapter.setUserType(Filters.UserType.DOG_WALKERS);
                 break;
-            case bothId:
-                // TODO: filter in both dog walkers and dog owners
-                Toast.makeText(this, "Both", Toast.LENGTH_SHORT).show();
+            case eitherId:
+                Toast.makeText(this, "Either", Toast.LENGTH_SHORT).show();
+                userRecyclerAdapter.setUserType(Filters.UserType.EITHER);
                 break;
         }
     }
@@ -84,23 +86,23 @@ public class SearchUsersActivity extends LocationUpdatingAppCompatActivity {
         final int anywhere = R.id.anywhere;
         switch (checkedId) {
             case nearby:
-                // TODO: filter out users that are not nearby
                 Toast.makeText(this, "Nearby", Toast.LENGTH_SHORT).show();
+                userRecyclerAdapter.setUserDistance(Filters.UserDistance.NEARBY);
                 break;
             case anywhere:
-                // TODO: filter in users that are not nearby
                 Toast.makeText(this, "Anywhere", Toast.LENGTH_SHORT).show();
+                userRecyclerAdapter.setUserDistance(Filters.UserDistance.ANYWHERE);
                 break;
         }
     }
 
     private void setActiveUsersOnCheckedChangeListener(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-            // TODO: filter out non-active users
             Toast.makeText(this, "Active Users - true", Toast.LENGTH_SHORT).show();
+            userRecyclerAdapter.setActiveUsers(Filters.ActiveUsers.ACTIVE_USERS);
         } else {
-            // TODO: filter in non-active users
             Toast.makeText(this, "Active Users - false", Toast.LENGTH_SHORT).show();
+            userRecyclerAdapter.setActiveUsers(Filters.ActiveUsers.ANY_USERS);
         }
     }
 
@@ -134,8 +136,8 @@ public class SearchUsersActivity extends LocationUpdatingAppCompatActivity {
         When a user clicks on a "request walk" button -> request to start a walk with a Snack to cancel the action. */
 
     @Override
-    protected void setGeoQuery(Location location) {
-        super.setGeoQuery(location);
-        userRecyclerAdapter.setLocationListener(geoQuery);
+    protected void onDestroy() {
+        super.onDestroy();
+        userRecyclerAdapter.removeListeners();
     }
 }

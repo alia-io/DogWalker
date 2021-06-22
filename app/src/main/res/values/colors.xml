@@ -42,5 +42,6 @@
     <color name="purple">#FF6200EE</color>
     <color name="lilac">#FFBB86FC</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_gray">#FF343434</color>
     <color name="black">#FF000000</color>
 </resources>

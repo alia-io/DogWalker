@@ -41,6 +41,7 @@
     <string name="search_filter_1">Search For:</string>
     <string name="search_filter_2">Distance:</string>
     <string name="search_no_results">No users found.</string>
+    <string name="active">ACTIVE</string>
 
     <!--Dates-->
     <string name="day">day</string>
@@ -129,7 +130,7 @@
     <string name="from_walkers_search">From active dog walkers nearby</string>
     <string name="dog_owners">Dog Owners</string>
     <string name="dog_walkers">Dog Walkers</string>
-    <string name="both">Both</string>
+    <string name="either">Either</string>
     <string name="nearby">Nearby</string>
     <string name="anywhere">Anywhere</string>
 

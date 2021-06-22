@@ -18,8 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,7 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,7 +80,10 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
                 }
             }
 
-            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
             @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
@@ -92,7 +92,7 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
     @NonNull @Override
     public DogDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new DogDetailsViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_view_dog_details, parent, false));
+                .inflate(R.layout.card_dog_details, parent, false));
     }
 
     @Override
