@@ -4,9 +4,10 @@
     <color name="turquoise">#FF0F4C5C</color>
     <color name="bright_green">#FF59CD90</color>
     <color name="light_green_blue">#FF17C3B2</color>
+    <color name="light_blue">#FF66AFC4</color>
     <color name="bright_blue">#FF0BCAFE</color>
-    <color name="light_blue">#FF0091AD</color>
-    <color name="medium_blue">#FF0081A7</color>
+    <color name="medium_blue">#FF0091AD</color>
+    <color name="medium_dark_blue">#FF0081A7</color>
     <color name="dark_blue">#FF2E6F95</color>
     <color name="indigo">#FF455E89</color>
     <color name="violet">#FF5C4D7D</color>
@@ -25,6 +26,11 @@
     <color name="light_gray">#FFD3D3D3</color>
     <color name="off_white">#FFFDFCDC</color>
     <color name="transparent">#00000000</color>
+
+    <color name="message_blue">#FF418999</color>
+    <color name="message_tan">#FF706969</color>
+    <color name="message_brown">#FF705959</color>
+    <color name="message_date">#FF5B5050</color>
 
     <color name="dark_maroon">#FF412234</color>
     <color name="reddish_brown">#FF591F0A</color>

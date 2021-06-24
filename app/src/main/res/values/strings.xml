@@ -42,6 +42,7 @@
     <string name="search_filter_2">Distance:</string>
     <string name="search_no_results">No users found.</string>
     <string name="active">ACTIVE</string>
+    <string name="walk_request">Walk Request</string>
 
     <!--Dates-->
     <string name="day">day</string>
@@ -63,9 +64,9 @@
     <string name="add_dog">Add Dog</string>
     <string name="save_dogs">Save Dogs</string>
     <string name="save_dog">Save Dog</string>
-
     <string name="verify_email_button">Send Verification Email</string>
     <string name="reset_password_button">Send Password Reset Email</string>
+    <string name="send_button">Send</string>
 
     <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>
