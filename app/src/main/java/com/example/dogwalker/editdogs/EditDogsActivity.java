@@ -1,7 +1,7 @@
 package com.example.dogwalker.editdogs;
 
 import com.example.dogwalker.Dog;
-import com.example.dogwalker.LocationUpdatingAppCompatActivity;
+import com.example.dogwalker.BackgroundAppCompatActivity;
 import com.example.dogwalker.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import java.util.UUID;
 
-public class EditDogsActivity extends LocationUpdatingAppCompatActivity implements EditDogDialogListener, DogDetailItemListener {
+public class EditDogsActivity extends BackgroundAppCompatActivity implements EditDogDialogListener, DogDetailItemListener {
 
     private ConstraintLayout activityLayout;
     private EditDogFragment editDogFragment;

@@ -25,7 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class HomeActivity extends LocationUpdatingAppCompatActivity implements NewWalkFragmentTracker {
+public class HomeActivity extends BackgroundAppCompatActivity implements NewWalkFragmentTracker {
 
     private User user;
     private boolean findDogWalkers;

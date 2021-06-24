@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +36,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 
-public abstract class LocationUpdatingAppCompatActivity extends AppCompatActivity {
+public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
 
     private static final int REQUEST_FOR_LOCATION = 0011;
     private static final long UPDATE_INTERVAL = 10000;      // 10s
@@ -48,6 +49,9 @@ public abstract class LocationUpdatingAppCompatActivity extends AppCompatActivit
     protected FirebaseDatabase database;
     protected DatabaseReference userRef;
     protected FirebaseStorage storage;
+
+    private DatabaseReference messageReference;
+    private ChildEventListener messageListener;
 
     private GeoFire geoFire;
     protected GeoQuery geoQuery;

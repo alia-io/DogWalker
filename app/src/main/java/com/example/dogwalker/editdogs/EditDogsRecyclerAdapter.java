@@ -65,25 +65,34 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                keyList.add(snapshot.getKey());
-                notifyItemInserted(keyList.size() - 1);
-                recyclerView.scrollToPosition(keyList.size() - 1);
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                int position = keyList.indexOf(snapshot.getKey());
-                if (position != -1) {
-                    keyList.remove(position);
-                    notifyItemRemoved(position);
-                    recyclerView.scrollToPosition(position);
+                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null
+                        && !keyList.contains(snapshot.getKey()) && Boolean.parseBoolean(snapshot.getValue().toString())) {
+                    keyList.add(snapshot.getKey());
+                    notifyItemInserted(keyList.size() - 1);
+                    recyclerView.scrollToPosition(keyList.size() - 1);
                 }
             }
 
-            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
 
+                    if (!keyList.contains(snapshot.getKey()) && Boolean.parseBoolean(snapshot.getValue().toString())) {
+                        keyList.add(snapshot.getKey());
+                        notifyItemInserted(keyList.size() - 1);
+                        recyclerView.scrollToPosition(keyList.size() - 1);
+                    } else {
+                        int position = keyList.indexOf(snapshot.getKey());
+                        if (position != -1 && !Boolean.parseBoolean(snapshot.getValue().toString())) {
+                            keyList.remove(position);
+                            notifyItemRemoved(position);
+                            recyclerView.scrollToPosition(position);
+                        }
+                    }
+                }
             }
 
+            @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
             @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
@@ -115,7 +124,7 @@ public class EditDogsRecyclerAdapter extends RecyclerView.Adapter<EditDogsRecycl
                         listener.startEditDogFragment(currentDogKey, "edit_dog");
                         return true;
                     case removeDogId:
-                        currentUserRef.child("dogs/" + currentDogKey).setValue(null)
+                        currentUserRef.child("dogs/" + currentDogKey).setValue(false)
                                 .addOnSuccessListener(aVoid1 ->
                                         Toast.makeText(v.getContext(), "Your dog was removed.", Toast.LENGTH_SHORT).show())
                                 .addOnFailureListener(e ->

@@ -3,6 +3,7 @@ package com.example.dogwalker.search;
 import com.example.dogwalker.R;
 import com.example.dogwalker.CircleTransform;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,26 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                                 Boolean.parseBoolean(snapshot.child("dogWalkerActive").getValue().toString()));
                         if (snapshot.hasChild("profilePicture"))
                             userModel.setProfilePicture(snapshot.child("profilePicture").getValue().toString());
+                        if (snapshot.hasChild("dogs") && snapshot.child("dogs").hasChildren()) {
+                            Iterable<DataSnapshot> dogSnapshots = snapshot.child("dogs").getChildren();
+                            for (DataSnapshot dogSnapshot : dogSnapshots) {
+                                if (dogSnapshot != null && dogSnapshot.getKey() != null && dogSnapshot.getValue() != null
+                                        && Boolean.parseBoolean(dogSnapshot.getValue().toString())) {
+                                    String dogKey = dogSnapshot.getKey();
+                                    database.getReference("Dogs/" + dogKey + "profilePicture").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot != null && snapshot.getValue() != null) {
+                                                userModel.getDogs().add(dogKey);
+                                                userModel.getDogPictures().put(dogKey, snapshot.getValue().toString());
+                                            }
+                                        }
+                                        @Override public void onCancelled(@NonNull DatabaseError error) { }
+                                    });
+
+                                }
+                            }
+                        }
                         keyToUserMaster.put(userKey, userModel);
                         if (!keyList.contains(userKey)) {
                             keyList.add(userKey);
@@ -100,6 +121,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("UsersRef", "onChildChanged");
                 if (snapshot != null && snapshot.getValue() != null) {
                     String userKey = snapshot.getKey();
                     if (userKey != null && keyToUserMaster.containsKey(userKey)) {
@@ -111,6 +133,26 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                                 Boolean.parseBoolean(snapshot.child("dogWalkerActive").getValue().toString()));
                         if (snapshot.hasChild("profilePicture"))
                             userModel.setProfilePicture(snapshot.child("profilePicture").getValue().toString());
+                        if (snapshot.hasChild("dogs") && snapshot.child("dogs").hasChildren()) {
+                            Iterable<DataSnapshot> dogSnapshots = snapshot.child("dogs").getChildren();
+                            for (DataSnapshot dogSnapshot : dogSnapshots) {
+                                if (dogSnapshot != null && dogSnapshot.getKey() != null && dogSnapshot.getValue() != null
+                                        && Boolean.parseBoolean(dogSnapshot.getValue().toString())) {
+                                    String dogKey = dogSnapshot.getKey();
+                                    database.getReference("Dogs/" + dogKey + "profilePicture").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot != null && snapshot.getValue() != null) {
+                                                userModel.getDogs().add(dogKey);
+                                                userModel.getDogPictures().put(dogKey, snapshot.getValue().toString());
+                                            }
+                                        }
+                                        @Override public void onCancelled(@NonNull DatabaseError error) { }
+                                    });
+
+                                }
+                            }
+                        }
                         keyToUserMaster.remove(userKey);
                         keyToUserMaster.put(userKey, userModel);
                         int position = keyList.indexOf(userKey);
@@ -141,15 +183,8 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                 }
             }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
@@ -309,12 +344,15 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         holder.userName.setText("");
         holder.dogOwner.setVisibility(View.GONE);
         holder.dogWalker.setVisibility(View.GONE);
-        for (ImageView dogPicture : holder.dogPictures) {
-            dogPicture.setVisibility(View.GONE);
-            dogPicture.setBackgroundResource(R.drawable.dog_default_picture);
-        }
 
-        // TODO: set image click handlers
+        // TODO: set profile picture click handler
+
+        holder.requestWalkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
 
         if (holder.userPictureRef != null && holder.userPictureListener != null)
             holder.userPictureRef.removeEventListener(holder.userPictureListener);
@@ -328,17 +366,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             holder.dogOwnerRef.removeEventListener(holder.dogOwnerListener);
         if (holder.dogWalkerRef != null && holder.dogWalkerListener != null)
             holder.dogWalkerRef.removeEventListener(holder.dogWalkerListener);
-        //if (holder.userDogsRef != null && holder.userDogsListener != null)
-        //    holder.userDogsRef.removeEventListener(holder.userDogsListener);
-        if (holder.userDogsQuery != null && holder.userDogsListener != null)
-            holder.userDogsQuery.removeEventListener(holder.userDogsListener);
-
-        for (int i = 0; i < holder.dogPictureRefs.size() && i < holder.dogPictureListeners.size(); i++) {
-            if (holder.dogPictureRefs.get(i) != null && holder.dogPictureListeners.get(i) != null)
-                holder.dogPictureRefs.get(i).removeEventListener(holder.dogPictureListeners.get(i));
-        }
-        holder.dogPictureRefs.clear();
-        holder.dogPictureListeners.clear();
 
         // TODO: change to use userModel instead of snapshot to update view
 
@@ -415,41 +442,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
-
-        /*holder.userDogsQuery = currentUserRef.child("dogs").orderByValue().startAfter(true).limitToFirst(MAX_DOGS);
-        holder.userDogsListener = holder.userDogsQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                for (int i = 0; i < holder.dogPictureRefs.size() && i < holder.dogPictureListeners.size(); i++) {
-                    if (holder.dogPictureRefs.get(i) != null && holder.dogPictureListeners.get(i) != null)
-                        holder.dogPictureRefs.get(i).removeEventListener(holder.dogPictureListeners.get(i));
-                }
-                holder.dogPictureRefs.clear();
-                holder.dogPictureListeners.clear();
-                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
-                    DatabaseReference dogPictureRef = database.getReference("Dogs/" + snapshot.getKey() + "/profilePicture");
-                    holder.dogPictureRefs.add(dogPictureRef);
-                    ImageView dogPicture = holder.dogPictures.get(holder.dogPictureRefs.size());
-                    ValueEventListener dogPictureListener = dogPictureRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Picasso.get().load(snapshot.getValue().toString()).transform(new CircleTransform()).into(dogPicture);
-                            dogPicture.setVisibility(View.VISIBLE);
-                        }
-                        @Override public void onCancelled(@NonNull DatabaseError error) { }
-                    });
-                    holder.dogPictureListeners.add(dogPictureListener);
-                }
-            }
-
-            @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                //TODO
-            }
-
-            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-            @Override public void onCancelled(@NonNull DatabaseError error) { }
-        });*/
     }
 
     public void removeListeners() {
@@ -470,7 +462,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         public TextView userName;
         public TextView dogOwner;
         public TextView dogWalker;
-        public List<ImageView> dogPictures;
 
         public DatabaseReference userPictureRef;
         public DatabaseReference ownerActiveRef;
@@ -478,9 +469,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         public DatabaseReference userNameRef;
         public DatabaseReference dogOwnerRef;
         public DatabaseReference dogWalkerRef;
-        public Query userDogsQuery;
-        //public DatabaseReference userDogsRef;
-        public List<DatabaseReference> dogPictureRefs;
 
         public ValueEventListener userPictureListener;
         public ValueEventListener ownerActiveListener;
@@ -488,8 +476,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         public ValueEventListener userNameListener;
         public ValueEventListener dogOwnerListener;
         public ValueEventListener dogWalkerListener;
-        public ChildEventListener userDogsListener;
-        public List<ValueEventListener> dogPictureListeners;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -499,14 +485,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             userName = itemView.findViewById(R.id.user_name);
             dogOwner = itemView.findViewById(R.id.dog_owner);
             dogWalker = itemView.findViewById(R.id.dog_walker);
-            dogPictures = new ArrayList<>();
-            dogPictures.add(itemView.findViewById(R.id.dog_picture_1));
-            dogPictures.add(itemView.findViewById(R.id.dog_picture_2));
-            dogPictures.add(itemView.findViewById(R.id.dog_picture_3));
-            dogPictures.add(itemView.findViewById(R.id.dog_picture_4));
-            dogPictures.add(itemView.findViewById(R.id.dog_picture_5));
-            dogPictureRefs = new ArrayList<>();
-            dogPictureListeners = new ArrayList<>();
         }
     }
 }

@@ -15,10 +15,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dogwalker.LocationUpdatingAppCompatActivity;
+import com.example.dogwalker.BackgroundAppCompatActivity;
 import com.example.dogwalker.R;
 
-public class SearchUsersActivity extends LocationUpdatingAppCompatActivity {
+public class SearchUsersActivity extends BackgroundAppCompatActivity {
 
     private UserRecyclerAdapter userRecyclerAdapter;
 
