@@ -148,7 +148,7 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
     }
 
     private void saveNewDogToDatabase(Dog dog) {
-        DatabaseReference userDogRef = userRef.child("dogs").push();
+        DatabaseReference userDogRef = currentUserRef.child("dogs").push();
         userDogRef.setValue(true)
                 .addOnSuccessListener(aVoid ->
                         updateDogInDatabase(userDogRef.getKey(), dog))

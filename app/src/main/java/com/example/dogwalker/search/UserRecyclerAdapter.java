@@ -43,6 +43,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     private DatabaseReference allUsersRef;
     private ChildEventListener allUsersListener;
 
+    private SearchUsersClickListener clickListener;
     private RecyclerView recyclerView;
 
     private GeoQuery geoQuery;
@@ -60,7 +61,10 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
     private static final int MAX_DOGS = 5;
 
-    public UserRecyclerAdapter(RecyclerView recyclerView, FirebaseUser currentUser, FirebaseDatabase database, FirebaseStorage storage, GeoQuery geoQuery) {
+    public UserRecyclerAdapter(SearchUsersClickListener clickListener, RecyclerView recyclerView, FirebaseUser currentUser,
+                               FirebaseDatabase database, FirebaseStorage storage, GeoQuery geoQuery) {
+
+        this.clickListener = clickListener;
         this.recyclerView = recyclerView;
         this.currentUser = currentUser;
         this.database = database;
@@ -345,14 +349,8 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         holder.dogOwner.setVisibility(View.GONE);
         holder.dogWalker.setVisibility(View.GONE);
 
-        // TODO: set profile picture click handler
-
-        holder.requestWalkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
+        holder.userPicture.setOnClickListener(v -> clickListener.onClickProfile(userId));
+        holder.requestWalkButton.setOnClickListener(v -> clickListener.onClickRequestWalk(userId));
 
         if (holder.userPictureRef != null && holder.userPictureListener != null)
             holder.userPictureRef.removeEventListener(holder.userPictureListener);

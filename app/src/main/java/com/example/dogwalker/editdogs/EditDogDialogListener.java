@@ -1,7 +1,5 @@
 package com.example.dogwalker.editdogs;
 
-import android.view.MenuItem;
-
 import com.example.dogwalker.Dog;
 
 public interface EditDogDialogListener {

@@ -47,7 +47,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
     protected FirebaseAuth auth;
     protected FirebaseUser currentUser;
     protected FirebaseDatabase database;
-    protected DatabaseReference userRef;
+    protected DatabaseReference currentUserRef;
     protected FirebaseStorage storage;
 
     private DatabaseReference messageReference;
@@ -66,7 +66,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("Users/" + currentUser.getUid());
+        currentUserRef = database.getReference("Users/" + currentUser.getUid());
         storage = FirebaseStorage.getInstance();
     }
 
@@ -142,7 +142,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
             setGeoQuery(lastLocation);
         }
 
-        userRef.runTransaction(new Transaction.Handler() {
+        currentUserRef.runTransaction(new Transaction.Handler() {
             @NonNull @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 currentData.child("latitude").setValue(String.valueOf(latitude));

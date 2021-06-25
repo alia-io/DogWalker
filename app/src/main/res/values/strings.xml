@@ -43,6 +43,12 @@
     <string name="search_no_results">No users found.</string>
     <string name="active">ACTIVE</string>
     <string name="walk_request">Walk Request</string>
+    <string name="profile_i_am">I am a</string>
+    <string name="bullet_dog_owner">&#8226; Dog Owner &#8226;</string>
+    <string name="bullet_dog_walker">&#8226; Dog Walker &#8226;</string>
+    <string name="my_dogs_title">My Dogs:</string>
+    <string name="my_reviews_title">My Reviews:</string>
+    <string name="rating_title">Overall Rating: </string>
 
     <!--Dates-->
     <string name="day">day</string>
@@ -67,6 +73,8 @@
     <string name="verify_email_button">Send Verification Email</string>
     <string name="reset_password_button">Send Password Reset Email</string>
     <string name="send_button">Send</string>
+    <string name="add_contact_button">Add Contact</string>
+    <string name="send_message_button">Send Message</string>
 
     <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>

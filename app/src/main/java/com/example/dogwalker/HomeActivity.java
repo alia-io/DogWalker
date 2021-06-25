@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dogwalker.search.SearchUsersActivity;
+import com.example.dogwalker.viewprofile.ViewProfileActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -50,7 +51,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
     @Override
     protected void onResume() {
         super.onResume();
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = snapshot.getValue(User.class);
@@ -142,13 +143,16 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         final int viewContactsId = R.id.action_view_contacts;
         final int viewLogId = R.id.action_view_log;
         final int logoutId = R.id.action_logout;
+        Intent intent;
 
         switch (item.getItemId()) {
             case editAccountId:
                 // TODO
                 return true;
             case viewProfileId:
-                // TODO
+                intent = new Intent(this, ViewProfileActivity.class);
+                intent.putExtra("user_id", currentUser.getUid());
+                startActivity(intent);
                 return true;
             case viewMessagesId:
                 // TODO
@@ -160,7 +164,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
                 startActivity(new Intent(this, EditDogsActivity.class));
                 return true;
             case searchUsersId:
-                Intent intent = new Intent(this, SearchUsersActivity.class);
+                intent = new Intent(this, SearchUsersActivity.class);
                 intent.putExtra("find_walk", "none");
                 startActivity(intent);
                 return true;
@@ -210,14 +214,14 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         activeOwnerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 user.setDogOwnerActive(true);
-                userRef.child("dogOwnerActive").setValue(true)
+                currentUserRef.child("dogOwnerActive").setValue(true)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You are now actively looking for dog walkers!", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
                                 Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 user.setDogOwnerActive(false);
-                userRef.child("dogOwnerActive").setValue(false)
+                currentUserRef.child("dogOwnerActive").setValue(false)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You stopped looking for dog walkers.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
@@ -230,14 +234,14 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         activeWalkerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 user.setDogWalkerActive(true);
-                userRef.child("dogWalkerActive").setValue(true)
+                currentUserRef.child("dogWalkerActive").setValue(true)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You are now actively looking for dogs to walk!", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
                                 Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 user.setDogWalkerActive(false);
-                userRef.child("dogWalkerActive").setValue(false)
+                currentUserRef.child("dogWalkerActive").setValue(false)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You stopped looking for dogs to walk.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->

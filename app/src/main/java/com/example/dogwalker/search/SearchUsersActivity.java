@@ -1,5 +1,6 @@
 package com.example.dogwalker.search;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogwalker.BackgroundAppCompatActivity;
 import com.example.dogwalker.R;
+import com.example.dogwalker.viewprofile.ViewProfileActivity;
 
-public class SearchUsersActivity extends BackgroundAppCompatActivity {
+public class SearchUsersActivity extends BackgroundAppCompatActivity implements SearchUsersClickListener {
 
     private UserRecyclerAdapter userRecyclerAdapter;
 
@@ -34,7 +36,7 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
-        userRecyclerAdapter = new UserRecyclerAdapter(recyclerView, currentUser, database, storage, geoQuery);
+        userRecyclerAdapter = new UserRecyclerAdapter(this, recyclerView, currentUser, database, storage, geoQuery);
         recyclerView.setAdapter(userRecyclerAdapter);
 
         ((RadioGroup) findViewById(R.id.user_type)).setOnCheckedChangeListener(this::setUserTypeOnCheckedChangeListener);
@@ -134,6 +136,18 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity {
             - User profile contains all user & dog info, plus buttons to send message, add contact (with Snack to cancel),
               and request walk (with dialog to set time/Snack to cancel)
         When a user clicks on a "request walk" button -> request to start a walk with a Snack to cancel the action. */
+
+    @Override
+    public void onClickProfile(String targetUserId) {
+        Intent intent = new Intent(this, ViewProfileActivity.class);
+        intent.putExtra("user_id", targetUserId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClickRequestWalk(String targetUserId) {
+        // TODO: request walk on click
+    }
 
     @Override
     protected void onDestroy() {
