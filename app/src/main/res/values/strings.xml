@@ -49,7 +49,16 @@
     <string name="my_dogs_title">My Dogs:</string>
     <string name="my_reviews_title">My Reviews:</string>
     <string name="rating_title">Overall Rating: </string>
-
+    <string name="start_time_prompt">Approximately when should the walk begin?</string>
+    <string name="message">Message:</string>
+    <string name="compensation">Proposed Compensation:</string>
+    <string name="which_dogs">Which dogs will be walked?</string>
+    <string name="select_walk_role_title_1">Will </string>
+    <string name="select_walk_role_title_2">or yourself be the dog walker?</string>
+    <string name="select_walk_role_option_1"> will be walking my dogs.</string>
+    <string name="select_walk_role_option_2_a">I will be walking</string>
+    <string name="select_walk_role_option_2_b">\'s dogs.</string>
+d
     <!--Dates-->
     <string name="day">day</string>
     <string name="month">month</string>
@@ -59,7 +68,10 @@
     <string name="years">years</string>
     <string name="months_comma">months,</string>
     <string name="years_comma">years,</string>
+
+    <!--Punctuation-->
     <string name="comma">,</string>
+    <string name="period">.</string>
 
     <!--Button Text-->
     <string name="sign_up_button">Sign Up</string>
@@ -75,6 +87,7 @@
     <string name="send_button">Send</string>
     <string name="add_contact_button">Add Contact</string>
     <string name="send_message_button">Send Message</string>
+    <string name="request_walk">Walk Request with</string>
 
     <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>
@@ -123,6 +136,13 @@
         <item>Miles</item>
     </string-array>
 
+    <string-array name="currencies">
+        <item>USD</item>
+    </string-array>
+    <string-array name="currency_symbols">
+        <item>$</item>
+    </string-array>
+
     <!--RadioButton Text-->
     <string name="untrained_description">Untrained <small>(no commands)</small></string>
     <string name="minimally_trained_description">Some training <small>(few commands, sometimes listens)</small></string>
@@ -143,6 +163,12 @@
     <string name="either">Either</string>
     <string name="nearby">Nearby</string>
     <string name="anywhere">Anywhere</string>
+    <string name="asap">ASAP</string>
+    <string name="set_date_time">Set Day/Time</string>
+
+    <string name="message_notification">New Message from</string>
+    <string name="contact_notification">Contact Request from</string>
+    <string name="walk_request_notification">Walk Request from</string>
 
     <!--Art Credit-->
 

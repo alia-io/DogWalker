@@ -2,7 +2,10 @@ package com.example.dogwalker;
 
 import com.google.firebase.database.ServerValue;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.NoArgsConstructor;
@@ -17,7 +20,7 @@ public class User {
     private String emailAddress;
     private String profilePicture;
     private String profileAboutMe;
-    private Object timestamp;
+    private Long timestamp;
 
     private boolean dogOwner = false;
     private Object dogOwnerExperience;  // Length of time user has owned dogs
@@ -38,11 +41,12 @@ public class User {
 
     private String latitude;
     private String longitude;
+    private Map<String, Object> notifications = new HashMap<>();
 
     public User(String profileName, String phoneNumber, String emailAddress) {
         this.profileName = profileName;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
-        this.timestamp = ServerValue.TIMESTAMP;
+        this.timestamp = Calendar.getInstance().getTimeInMillis();
     }
 }

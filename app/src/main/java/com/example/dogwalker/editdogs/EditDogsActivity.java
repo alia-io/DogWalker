@@ -97,6 +97,9 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
             Toast.makeText(this, "We need permission to access your camera and photos", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
+
     private void takePhoto() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -148,7 +151,7 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
     }
 
     private void saveNewDogToDatabase(Dog dog) {
-        DatabaseReference userDogRef = currentUserRef.child("dogs").push();
+        DatabaseReference userDogRef = currentUserReference.child("dogs").push();
         userDogRef.setValue(true)
                 .addOnSuccessListener(aVoid ->
                         updateDogInDatabase(userDogRef.getKey(), dog))

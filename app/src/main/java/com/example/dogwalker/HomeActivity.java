@@ -6,7 +6,6 @@ import com.example.dogwalker.newwalk.NewWalkFragment1;
 import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
     @Override
     protected void onResume() {
         super.onResume();
-        currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = snapshot.getValue(User.class);
@@ -87,8 +86,11 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-        
+
     }
+
+    @Override
+    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -215,14 +217,14 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         activeOwnerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 user.setDogOwnerActive(true);
-                currentUserRef.child("dogOwnerActive").setValue(true)
+                currentUserReference.child("dogOwnerActive").setValue(true)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You are now actively looking for dog walkers!", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
                                 Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 user.setDogOwnerActive(false);
-                currentUserRef.child("dogOwnerActive").setValue(false)
+                currentUserReference.child("dogOwnerActive").setValue(false)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You stopped looking for dog walkers.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
@@ -235,14 +237,14 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         activeWalkerBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 user.setDogWalkerActive(true);
-                currentUserRef.child("dogWalkerActive").setValue(true)
+                currentUserReference.child("dogWalkerActive").setValue(true)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You are now actively looking for dogs to walk!", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->
                                 Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 user.setDogWalkerActive(false);
-                currentUserRef.child("dogWalkerActive").setValue(false)
+                currentUserReference.child("dogWalkerActive").setValue(false)
                         .addOnSuccessListener(aVoid ->
                                 Toast.makeText(HomeActivity.this, "You stopped looking for dogs to walk.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e ->

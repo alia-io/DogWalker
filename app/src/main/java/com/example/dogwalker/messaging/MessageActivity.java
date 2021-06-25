@@ -24,6 +24,7 @@ public class MessageActivity extends BackgroundAppCompatActivity {
     private MessageRecyclerAdapter messageRecyclerAdapter;
     private EditText newMessageText;
     private String userId;
+    private String messageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class MessageActivity extends BackgroundAppCompatActivity {
         newMessageText = findViewById(R.id.new_message_text);
 
         userId = getIntent().getStringExtra("user_id");
+        messageId = getIntent().getStringExtra("show_request");
 
         // Get other user's profile picture and display name
         database.getReference("Users/" + userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -63,13 +65,21 @@ public class MessageActivity extends BackgroundAppCompatActivity {
         recyclerView.setAdapter(messageRecyclerAdapter);
     }
 
+    @Override
+    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
+
+    @Override
+    protected boolean isTargetChatOpen(String userId) {
+        return this.userId.equals(userId);
+    }
+
     public void send(View view) {
         String messageText = newMessageText.getText().toString();
         if (messageText.length() <= 0) {
             Toast.makeText(this, "Please write a message to send", Toast.LENGTH_SHORT).show();
             return;
         }
-        messageRecyclerAdapter.onSendNewMessage(messageText);
+        messageRecyclerAdapter.onSendNewMessage(this, messageText);
         newMessageText.setText("");
     }
 

@@ -109,6 +109,9 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         setProfileListeners();
     }
 
+    @Override
+    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
+
     private void setProfileListeners() {
 
         userNameReference = userReference.child("profileName");

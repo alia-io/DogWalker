@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:text="@string/which_dogs"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/dogs"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="@string/start_time_prompt"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingBottom="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/walk_time"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/asap"
+            android:text="@string/asap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/set_date_time"
+            android:text="@string/set_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+    <TextView
+        android:id="@+id/date_time_text"
+        android:textColor="@color/turquoise"
+        android:visibility="gone"
+        android:paddingStart="50dp"
+        android:paddingEnd="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="@string/compensation"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/compensation_1"
+            android:inputType="number"
+            android:maxLength="3"
+            android:background="@drawable/text_input_layout_style"
+            android:foregroundGravity="center"
+            android:padding="5dp"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/period"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/compensation_2"
+            android:inputType="number"
+            android:maxLength="2"
+            android:background="@drawable/text_input_layout_style"
+            android:foregroundGravity="center"
+            android:padding="5dp"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/currency"
+            android:entries="@array/currencies"
+            android:background="@drawable/text_input_layout_style"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:text="@string/message"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingBottom="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/message"
+        android:background="@drawable/text_input_layout_style"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+</LinearLayout>

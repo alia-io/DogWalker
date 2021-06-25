@@ -349,7 +349,8 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         holder.dogWalker.setVisibility(View.GONE);
 
         holder.userPicture.setOnClickListener(v -> clickListener.onClickProfile(userId));
-        holder.requestWalkButton.setOnClickListener(v -> clickListener.onClickRequestWalk(userId));
+        holder.requestWalkButton.setOnClickListener(v ->
+                clickListener.onClickRequestWalk(userId, userModel.getUserName(), userModel.isDogOwner(), userModel.isDogWalker()));
 
         if (holder.userPictureRef != null && holder.userPictureListener != null)
             holder.userPictureRef.removeEventListener(holder.userPictureListener);

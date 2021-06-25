@@ -1,8 +1,10 @@
 package com.example.dogwalker.messaging;
 
-import com.example.dogwalker.ChatMessage;
+import com.example.dogwalker.MessageNotification;
+import com.example.dogwalker.message.ChatMessage;
 import com.example.dogwalker.R;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -186,8 +189,32 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             currentChatReference.removeEventListener(currentChatListener);
     }
 
-    public void onSendNewMessage(String messageText) {
-        currentChatReference.push().setValue(new ChatMessage(selfUserId, targetUserId, messageText));
+    public void onSendNewMessage(Context context, String messageText) {
+        ChatMessage chatMessage = new ChatMessage(selfUserId, targetUserId, messageText);
+        DatabaseReference newMessage = currentChatReference.push();
+        String messageId = newMessage.getKey();
+        newMessage.setValue(chatMessage)
+                .addOnSuccessListener(aVoid ->
+                        database.getReference("Users/" + selfUserId + "/profileName").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot != null && snapshot.getValue() != null) {
+                                    String selfUserName = snapshot.getValue().toString();
+                                    database.getReference("Users/" + targetUserId + "/notifications").runTransaction(new Transaction.Handler() {
+                                        @NonNull @Override
+                                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                            currentData.child(String.valueOf(chatMessage.getTimestamp()))
+                                                    .setValue(new MessageNotification("message", selfUserId, selfUserName, messageId));
+                                            return Transaction.success(currentData);
+                                        }
+                                        @Override public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) { }
+                                    });
+                                }
+                            }
+                            @Override public void onCancelled(@NonNull DatabaseError error) { }
+                        }))
+                .addOnFailureListener(e ->
+                        Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {

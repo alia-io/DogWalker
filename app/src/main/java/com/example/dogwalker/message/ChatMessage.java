@@ -2,7 +2,8 @@ package com.example.dogwalker;
 
 import com.google.firebase.database.ServerValue;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class ChatMessage {
 
     private String owner;
     private String walker;
-    private List<String> dogs;
+    private Map<String, String> dogs;   // dogId : dogName
     private String walkTime;
     private float paymentAmount;
     private String currency;
@@ -30,5 +31,6 @@ public class ChatMessage {
         this.type = "message";
         this.message = message;
         this.timestamp = ServerValue.TIMESTAMP;
+        dogs = new HashMap<>();
     }
 }

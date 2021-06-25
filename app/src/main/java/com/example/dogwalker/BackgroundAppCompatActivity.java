@@ -1,20 +1,29 @@
 package com.example.dogwalker;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.dogwalker.messaging.MessageActivity;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -25,6 +34,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -33,8 +44,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
 
@@ -47,11 +67,8 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
     protected FirebaseAuth auth;
     protected FirebaseUser currentUser;
     protected FirebaseDatabase database;
-    protected DatabaseReference currentUserRef;
+    protected DatabaseReference currentUserReference;
     protected FirebaseStorage storage;
-
-    private DatabaseReference messageReference;
-    private ChildEventListener messageListener;
 
     private GeoFire geoFire;
     protected GeoQuery geoQuery;
@@ -60,13 +77,20 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
     private LocationRequest locationRequest;                    // Get location
     private LocationCallback locationCallback;                  // Get notified when location changes
 
+    private Query notificationQuery;
+    private ChildEventListener notificationListener;
+    protected ImageView notificationIcon;
+    private List<String> notificationKeyList = new ArrayList<>();
+    private Map<String, MessageNotification> notifications = new HashMap<>();
+    private Map<String, MessageNotification> unViewedNotifications = new HashMap<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        currentUserRef = database.getReference("Users/" + currentUser.getUid());
+        currentUserReference = database.getReference("Users/" + currentUser.getUid());
         storage = FirebaseStorage.getInstance();
     }
 
@@ -100,6 +124,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
         };
 
         setRequestLocationUpdates();
+        setUpUserNotifications();
     }
 
     private void setRequestLocationUpdates() {
@@ -142,7 +167,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
             setGeoQuery(lastLocation);
         }
 
-        currentUserRef.runTransaction(new Transaction.Handler() {
+        currentUserReference.runTransaction(new Transaction.Handler() {
             @NonNull @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 currentData.child("latitude").setValue(String.valueOf(latitude));
@@ -161,5 +186,143 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
 
     protected void setGeoQuery(Location lastLocation) {
         geoQuery = geoFire.queryAtLocation(new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()), QUERY_RADIUS);
+    }
+
+    private void setUpUserNotifications() {
+        setNotificationIcon();
+        AnimatorSet animatorSet = getNotificationAnimation();
+        setNotificationDatabaseListener(animatorSet);
+        setNotificationClickListeners();
+    }
+
+    protected abstract void setNotificationIcon();
+
+    private AnimatorSet getNotificationAnimation() {
+        AnimatorSet ringer = new AnimatorSet();
+        ValueAnimator firstAnim = ObjectAnimator.ofFloat(notificationIcon, "rotation", 0, -30);
+        ValueAnimator mainAnim = ObjectAnimator.ofFloat(notificationIcon, "rotation", -30, 30);
+        ValueAnimator lastAnim = ObjectAnimator.ofFloat(notificationIcon, "rotation", 30, 0);
+        mainAnim.setRepeatMode(ValueAnimator.REVERSE);
+        mainAnim.setRepeatCount(6);
+        firstAnim.setDuration(10);
+        mainAnim.setDuration(120);
+        lastAnim.setDuration(10);
+        ringer.play(firstAnim).before(mainAnim);
+        ringer.play(lastAnim).after(mainAnim);
+        return ringer;
+    }
+
+    private void setNotificationDatabaseListener(AnimatorSet ringer) {
+        final AtomicBoolean notificationAlert = new AtomicBoolean(false);
+        notificationQuery = currentUserReference.child("notifications").orderByKey();
+        notificationListener = notificationQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
+                    String notificationKey = snapshot.getKey();
+                    MessageNotification notification = snapshot.getValue(MessageNotification.class);
+                    if (!isTargetChatOpen(notification.getUserId()) && !notifications.containsKey(notificationKey)) {
+                        notificationKeyList.add(0, notificationKey);
+                        notifications.put(notificationKey, notification);
+                        if (!notification.isViewed() && !notificationAlert.get()) {
+                            unViewedNotifications.put(notificationKey, notification);
+                            notificationAlert.set(true);
+                            notificationIcon.setImageResource(R.drawable.ic_notify_active);
+                            new Thread(() -> {
+                                while(notificationAlert.get()) {
+                                    notificationIcon.post(ringer::start);
+                                    try {
+                                        Thread.sleep(5000);
+                                    } catch (InterruptedException e) {
+                                        Log.d("NotificationAlert", "Sleep Failure");
+                                    }
+                                }
+                            }).start();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
+                    String notificationKey = snapshot.getKey();
+                    if (notifications.containsKey(notificationKey)) {
+                        unViewedNotifications.remove(notificationKey);
+                        notificationKeyList.remove(notificationKey);
+                        notifications.remove(notificationKey);
+                        if (notificationAlert.get() && unViewedNotifications.isEmpty()) {
+                            notificationAlert.set(false);
+                            notificationIcon.post(() -> notificationIcon.setImageResource(R.drawable.ic_notify_inactive));
+                        }
+                    }
+                }
+            }
+
+            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void setNotificationClickListeners() {
+        notificationIcon.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(BackgroundAppCompatActivity.this, v);
+            MenuInflater inflater = popup.getMenuInflater();
+            Menu menu = popup.getMenu();
+            inflater.inflate(R.menu.menu_notifications, menu);
+            for (int i = 0; i < notificationKeyList.size(); i++) {
+                MessageNotification notification = notifications.get(notificationKeyList.get(i));
+                if (notification.getMessageType().equals("message"))
+                    menu.add(0, i, Menu.NONE, getString(R.string.message_notification) + " " + notification.getUserName());
+                else if (notification.getMessageType().equals("add_contact"))
+                    menu.add(0, i, Menu.NONE, getString(R.string.contact_notification) + " " + notification.getUserName());
+                else if (notification.getMessageType().equals("walk_request"))
+                    menu.add(0, i, Menu.NONE, getString(R.string.walk_request_notification) + " " + notification.getUserName());
+            }
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    String notificationKey = notificationKeyList.get(item.getItemId());
+                    MessageNotification notification = notifications.get(notificationKey);
+                    String userId = notification.getUserId();
+                    Intent intent = new Intent(BackgroundAppCompatActivity.this, MessageActivity.class);
+                    intent.putExtra("user_id", userId);
+                    if (notification.getMessageType().equals("message")) {
+                        currentUserReference.child("notifications/" + notificationKey).setValue(null)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        startActivity(intent);
+                                        if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(BackgroundAppCompatActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else if (notification.getMessageType().equals("add_contact")) {
+                        // TODO
+                    } else if (notification.getMessageType().equals("walk_request")) {
+                        intent.putExtra("show_request", notification.getMessageId());
+                        startActivity(intent);
+                        if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
+                    }
+                    return true;
+                }
+            });
+            popup.show();
+        });
+    }
+
+    protected boolean isTargetChatOpen(String userId) { return false; }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

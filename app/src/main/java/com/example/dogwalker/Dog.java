@@ -14,7 +14,7 @@ public class Dog {
     private String breed;
     private String profilePicture;
     private String profileAboutMe;
-    private Object birthDate;
+    private Long birthDate;
     private String trainingLevel;
     private String averageWalkLength;
     private List<String> infoAndHealthNeeds = new ArrayList<>();

@@ -11,10 +11,10 @@ import lombok.Setter;
 public class Walk {
     private String owner;
     private String walker;
-    private Object startTime;
-    private Object endTime;
-    private float paymentAmount;
+    private Long startTime;
+    private Long endTime;
+    private Float paymentAmount;
     private String currency;
-    private float rating;
+    private Float rating;
     private Map<String, Boolean> dogs = new HashMap<>();
 }
