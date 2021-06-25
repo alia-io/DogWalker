@@ -4,6 +4,7 @@ import com.example.dogwalker.BackgroundAppCompatActivity;
 import com.example.dogwalker.CircleTransform;
 import com.example.dogwalker.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dogwalker.messaging.MessageActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -232,7 +234,10 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
     }
 
     public void sendMessage(View view) {
-
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("user_id", userId);
+        startActivity(intent);
+        finish();
     }
 
     @Override

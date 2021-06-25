@@ -142,6 +142,7 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity implements 
         Intent intent = new Intent(this, ViewProfileActivity.class);
         intent.putExtra("user_id", targetUserId);
         startActivity(intent);
+        finish();
     }
 
     @Override

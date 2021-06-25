@@ -134,7 +134,6 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        final int editAccountId = R.id.action_edit_account;
         final int viewProfileId = R.id.action_view_profile;
         final int viewMessagesId = R.id.action_view_messages;
         final int editProfileId = R.id.action_edit_profile;
@@ -146,9 +145,6 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         Intent intent;
 
         switch (item.getItemId()) {
-            case editAccountId:
-                // TODO
-                return true;
             case viewProfileId:
                 intent = new Intent(this, ViewProfileActivity.class);
                 intent.putExtra("user_id", currentUser.getUid());

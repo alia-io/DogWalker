@@ -23,6 +23,7 @@ public class MessageActivity extends BackgroundAppCompatActivity {
 
     private MessageRecyclerAdapter messageRecyclerAdapter;
     private EditText newMessageText;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +36,20 @@ public class MessageActivity extends BackgroundAppCompatActivity {
         TextView targetNameView = findViewById(R.id.profile_name);
         newMessageText = findViewById(R.id.new_message_text);
 
-        String targetUserId = getIntent().getStringExtra("target_uid");
+        userId = getIntent().getStringExtra("user_id");
 
         // Get other user's profile picture and display name
-        database.getReference("Users/" + targetUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference("Users/" + userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild("profilePicture")) {
-                    Picasso.get().load(snapshot.child("profilePicture").getValue().toString())
-                            .transform(new CircleTransform()).into(imageView);
+                if (snapshot != null) {
+                    if (snapshot.hasChild("profilePicture") && snapshot.child("profilePicture").getValue() != null) {
+                        Picasso.get().load(snapshot.child("profilePicture").getValue().toString())
+                                .transform(new CircleTransform()).into(imageView);
+                    }
+                    if (snapshot.hasChild("displayName") && snapshot.child("displayName").getValue() != null)
+                        targetNameView.setText(snapshot.child("displayName").getValue().toString());
                 }
-                targetNameView.setText(snapshot.child("displayName").getValue().toString());
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
@@ -55,7 +59,7 @@ public class MessageActivity extends BackgroundAppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
-        messageRecyclerAdapter = new MessageRecyclerAdapter(auth, currentUser, database, recyclerView, targetUserId);
+        messageRecyclerAdapter = new MessageRecyclerAdapter(auth, currentUser, database, recyclerView, userId);
         recyclerView.setAdapter(messageRecyclerAdapter);
     }
 

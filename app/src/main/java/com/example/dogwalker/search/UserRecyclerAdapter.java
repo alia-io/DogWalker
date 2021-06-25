@@ -84,7 +84,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot != null && snapshot.getValue() != null) {
                     String userKey = snapshot.getKey();
-                    if (userKey != null && !keyToUserMaster.containsKey(userKey)) {
+                    if (userKey != null && !keyToUserMaster.containsKey(userKey) && snapshot.getValue() != null) {
                         UserModel userModel = new UserModel(userKey,
                                 snapshot.child("profileName").getValue().toString(),
                                 Boolean.parseBoolean(snapshot.child("dogOwner").getValue().toString()),
@@ -125,7 +125,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d("UsersRef", "onChildChanged");
                 if (snapshot != null && snapshot.getValue() != null) {
                     String userKey = snapshot.getKey();
                     if (userKey != null && keyToUserMaster.containsKey(userKey)) {
