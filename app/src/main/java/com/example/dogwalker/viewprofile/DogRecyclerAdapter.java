@@ -5,17 +5,13 @@ import com.example.dogwalker.R;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,10 +39,12 @@ public class DogRecyclerAdapter extends RecyclerView.Adapter<DogRecyclerAdapter.
     private DatabaseReference allDogsReference;
     private DatabaseReference myDogsReference;
     private ChildEventListener myDogsEventListener;
+    private DogProfileCallback callback;
     private List<String> keyList;
     private Resources resources;
 
-    public DogRecyclerAdapter(RecyclerView recyclerView, Resources resources, String userId) {
+
+    public DogRecyclerAdapter(DogProfileCallback callback, RecyclerView recyclerView, Resources resources, String userId) {
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
@@ -57,6 +55,7 @@ public class DogRecyclerAdapter extends RecyclerView.Adapter<DogRecyclerAdapter.
         myDogsReference = userReference.child("dogs");
 
         keyList = new ArrayList<>();
+        this.callback = callback;
         this.resources = resources;
 
         myDogsEventListener = myDogsReference.addChildEventListener(new ChildEventListener() {
@@ -66,6 +65,7 @@ public class DogRecyclerAdapter extends RecyclerView.Adapter<DogRecyclerAdapter.
                 if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null
                         && !keyList.contains(snapshot.getKey()) && Boolean.parseBoolean(snapshot.getValue().toString())) {
                     keyList.add(snapshot.getKey());
+                    if (keyList.size() == 1) callback.toggleDogsVisibility(true);
                     notifyItemInserted(keyList.size() - 1);
                     recyclerView.scrollToPosition(keyList.size() - 1);
                 }
@@ -77,12 +77,14 @@ public class DogRecyclerAdapter extends RecyclerView.Adapter<DogRecyclerAdapter.
 
                     if (!keyList.contains(snapshot.getKey()) && Boolean.parseBoolean(snapshot.getValue().toString())) {
                         keyList.add(snapshot.getKey());
+                        if (keyList.size() == 1) callback.toggleDogsVisibility(true);
                         notifyItemInserted(keyList.size() - 1);
                         recyclerView.scrollToPosition(keyList.size() - 1);
                     } else {
                         int position = keyList.indexOf(snapshot.getKey());
                         if (position != -1 && !Boolean.parseBoolean(snapshot.getValue().toString())) {
                             keyList.remove(position);
+                            if (keyList.size() == 0) callback.toggleDogsVisibility(false);
                             notifyItemRemoved(position);
                             recyclerView.scrollToPosition(position);
                         }

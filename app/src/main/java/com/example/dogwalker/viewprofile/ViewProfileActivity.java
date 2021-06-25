@@ -7,17 +7,14 @@ import com.example.dogwalker.R;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dogwalker.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 public class ViewProfileActivity extends BackgroundAppCompatActivity implements DogProfileCallback {
 
+    private DogRecyclerAdapter dogRecyclerAdapter;
     private DatabaseReference userReference;
     private String userId;
     //private User user;
@@ -40,7 +38,7 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
     private TextView aboutMe;
     private ImageView divider2;
     private TextView myDogsTitle;
-    private RecyclerView dogsRecyclerView;
+    private RecyclerView dogRecyclerView;
     //private ImageView divider3;
     //private TextView myReviewsTitle;
     //private LinearLayout ratingLayout;
@@ -82,12 +80,19 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         aboutMe = findViewById(R.id.about_me);
         divider2 = findViewById(R.id.divider_2);
         myDogsTitle = findViewById(R.id.my_dogs_title);
-        dogsRecyclerView = findViewById(R.id.dogs_recycler_view);
+        dogRecyclerView = findViewById(R.id.dogs_recycler_view);
         //divider3 = findViewById(R.id.divider_3);
         //myReviewsTitle = findViewById(R.id.my_reviews_title);
         //ratingLayout = findViewById(R.id.rating_layout);
         //ratingBar = findViewById(R.id.rating_bar);
         //reviewsRecyclerView = findViewById(R.id.reviews_recycler_view);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        dogRecyclerView.setLayoutManager(layoutManager);
+        dogRecyclerAdapter = new DogRecyclerAdapter(this, dogRecyclerView, getResources(), userId);
+        dogRecyclerView.setAdapter(dogRecyclerAdapter);
 
         findViewById(R.id.request_walk_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +186,6 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         dogWalkerListener = dogWalkerReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) { if (snapshot != null && snapshot.getValue() != null) {
-                    Log.d("profile", "dogWalker = " + snapshot.getValue().toString());
                     if (Boolean.parseBoolean(snapshot.getValue().toString()))
                         userTypeWalker.setVisibility(View.VISIBLE);
                     else userTypeWalker.setVisibility(View.GONE);
@@ -215,11 +219,11 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         if (showDogs) {
             divider2.setVisibility(View.VISIBLE);
             myDogsTitle.setVisibility(View.VISIBLE);
-            dogsRecyclerView.setVisibility(View.VISIBLE);
+            dogRecyclerView.setVisibility(View.VISIBLE);
         } else {
             divider2.setVisibility(View.GONE);
             myDogsTitle.setVisibility(View.GONE);
-            dogsRecyclerView.setVisibility(View.GONE);
+            dogRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -229,5 +233,25 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
 
     public void sendMessage(View view) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dogRecyclerAdapter.removeListener();
+        if (userNameReference != null && userNameListener != null)
+            userNameReference.removeEventListener(userNameListener);
+        if (profilePictureReference != null && profilePictureListener != null)
+            profilePictureReference.removeEventListener(profilePictureListener);
+        if (ownerActiveReference != null && ownerActiveListener != null)
+            ownerActiveReference.removeEventListener(ownerActiveListener);
+        if (walkerActiveReference != null && walkerActiveListener != null)
+            walkerActiveReference.removeEventListener(walkerActiveListener);
+        if (dogOwnerReference != null && dogOwnerListener != null)
+            dogOwnerReference.removeEventListener(dogOwnerListener);
+        if (dogWalkerReference != null && dogWalkerListener != null)
+            dogWalkerReference.removeEventListener(dogWalkerListener);
+        if (userAboutMeReference != null && userAboutMeListener != null)
+            userAboutMeReference.removeEventListener(userAboutMeListener);
     }
 }
