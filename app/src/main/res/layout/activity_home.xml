@@ -15,28 +15,45 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/DogWalker.ActionBar.Menu"
         app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
-            android:gravity="center"
-            android:orientation="horizontal"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/action_notification">
+                <ImageView
+                    android:src="@drawable/logo_transparent"
+                    android:layout_margin="3sp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:text="@string/app_name"
+                    android:textColor="@color/slate_blue"
+                    android:textStyle="bold"
+                    android:fontFamily="casual"
+                    android:textSize="24sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
             <ImageView
-                android:src="@drawable/logo_transparent"
-                android:layout_margin="3sp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
+                android:id="@+id/action_notification"
+                android:src="@drawable/ic_notify_inactive"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-            <TextView
-                android:text="@string/app_name"
-                android:textColor="@color/slate_blue"
-                android:textStyle="bold"
-                android:fontFamily="casual"
-                android:textSize="24sp"
-                android:layout_marginStart="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/user_profile_layout"

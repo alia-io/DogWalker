@@ -6,6 +6,7 @@ import com.example.dogwalker.newwalk.NewWalkFragment1;
 import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,6 +86,8 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
+
+        
     }
 
     @Override
@@ -133,7 +136,6 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         final int viewProfileId = R.id.action_view_profile;
         final int viewMessagesId = R.id.action_view_messages;
         final int editProfileId = R.id.action_edit_profile;
@@ -145,6 +147,9 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         Intent intent;
 
         switch (item.getItemId()) {
+                //Toolbar toolbar = findViewById(R.id.toolbar);
+                //View notificationIcon = toolbar.findViewById(R.id.action_notification);
+                //notificationIcon.animate().setDuration(1000).alpha(0F);
             case viewProfileId:
                 intent = new Intent(this, ViewProfileActivity.class);
                 intent.putExtra("user_id", currentUser.getUid());

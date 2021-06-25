@@ -105,6 +105,7 @@
     <string name="edit_dog">Edit Dog</string>
     <string name="remove_dog">Remove Dog</string>
     <string name="search">Search</string>
+    <string name="notification">Notifications</string>
 
     <!--CheckBox Text-->
     <string name="dog_owner_text">I am a dog owner</string>

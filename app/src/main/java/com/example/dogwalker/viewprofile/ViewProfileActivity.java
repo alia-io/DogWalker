@@ -68,6 +68,8 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userId = getIntent().getStringExtra("user_id");
         if (userId == null) finish();

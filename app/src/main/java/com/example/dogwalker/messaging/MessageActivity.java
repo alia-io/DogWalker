@@ -47,8 +47,8 @@ public class MessageActivity extends BackgroundAppCompatActivity {
                         Picasso.get().load(snapshot.child("profilePicture").getValue().toString())
                                 .transform(new CircleTransform()).into(imageView);
                     }
-                    if (snapshot.hasChild("displayName") && snapshot.child("displayName").getValue() != null)
-                        targetNameView.setText(snapshot.child("displayName").getValue().toString());
+                    if (snapshot.hasChild("profileName") && snapshot.child("profileName").getValue() != null)
+                        targetNameView.setText(snapshot.child("profileName").getValue().toString());
                 }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
