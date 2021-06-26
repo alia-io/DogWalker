@@ -3,7 +3,6 @@ package com.example.dogwalker.search;
 import com.example.dogwalker.R;
 import com.example.dogwalker.CircleTransform;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private FirebaseStorage storage;
+    private String selfUserId;
 
     private DatabaseReference allUsersRef;
     private ChildEventListener allUsersListener;
@@ -64,6 +64,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     public UserRecyclerAdapter(SearchUsersClickListener clickListener, RecyclerView recyclerView, FirebaseUser currentUser,
                                FirebaseDatabase database, FirebaseStorage storage, GeoQuery geoQuery) {
 
+        this.selfUserId = currentUser.getUid();
         this.clickListener = clickListener;
         this.recyclerView = recyclerView;
         this.currentUser = currentUser;
@@ -84,7 +85,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot != null && snapshot.getValue() != null) {
                     String userKey = snapshot.getKey();
-                    if (userKey != null && !keyToUserMaster.containsKey(userKey) && snapshot.getValue() != null) {
+                    if (userKey != null && !selfUserId.equals(userKey) && !keyToUserMaster.containsKey(userKey) && snapshot.getValue() != null) {
                         UserModel userModel = new UserModel(userKey,
                                 snapshot.child("profileName").getValue().toString(),
                                 Boolean.parseBoolean(snapshot.child("dogOwner").getValue().toString()),
