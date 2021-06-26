@@ -78,7 +78,7 @@ public class SelectWalkRoleFragment extends DialogFragment {
         walkerButton = view.findViewById(R.id.walker);
 
         return builder.setView(view)
-                .setTitle(getActivity().getResources().getString(R.string.request_walk) + " " + targetUserName)
+                .setTitle(getActivity().getResources().getString(R.string.request_walk_for) + " " + targetUserName)
                 .setIcon(R.drawable.dog_walker)
                 .setPositiveButton("Next", (dialog, which) -> onNextClicked())
                 .setNegativeButton("Cancel", (dialog, which) -> dismiss())

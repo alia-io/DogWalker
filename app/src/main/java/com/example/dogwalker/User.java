@@ -1,7 +1,5 @@
 package com.example.dogwalker;
 
-import com.google.firebase.database.ServerValue;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,11 +31,11 @@ public class User {
 
     private Map<String, String> contacts = new HashMap<>();     // userID : chatID
     private Map<String, String> otherUsers = new HashMap<>();   // userID : chatID
-    private String dogWalkingLog;
+    private List<String> dogWalkingLog = new ArrayList<>();     // walkID
 
     private boolean dogOwnerActive = false;     // Currently looking for walkers
     private boolean dogWalkerActive = false;    // Currently looking for walks
-    private boolean currentWalk = false;        // Currently on a walk
+    private String currentWalk = "NONE";        // Currently on a walk
 
     private String latitude;
     private String longitude;

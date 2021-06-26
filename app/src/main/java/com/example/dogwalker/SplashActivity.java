@@ -83,9 +83,8 @@ public class SplashActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 assert user != null;
                 if (user.isDogOwner() || user.isDogWalker() || getIntent().getBooleanExtra("setup_complete", false)) { // Profile setup not needed
-                    if (user.isCurrentWalk()) // User has a currently active walk
-                        // TODO: take to current walk activity instead of HomeActivity
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    if (!user.getCurrentWalk().equals("NONE")) // User has a currently active walk
+                        startActivity(new Intent(SplashActivity.this, WalkActivity.class));
                     else // User does not have a currently active walk
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 } else // Profile setup needed

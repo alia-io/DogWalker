@@ -120,6 +120,7 @@ public class SendWalkRequestFragment extends DialogFragment implements DatePicke
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         Bundle args = getArguments();
         int layout = args.getInt("layout");
         targetIsWalker = args.getBoolean("target_walker");
@@ -145,7 +146,7 @@ public class SendWalkRequestFragment extends DialogFragment implements DatePicke
         setDateTime.setOnCheckedChangeListener((buttonView, isChecked) -> onSetDateTimeClicked(isChecked));
 
         return builder.setView(view)
-                .setTitle(getActivity().getResources().getString(R.string.request_walk) + " " + targetUserName)
+                .setTitle(getActivity().getResources().getString(R.string.request_walk_for) + " " + targetUserName)
                 .setIcon(R.drawable.dog_walker)
                 .setPositiveButton("Send Request", (dialog, which) -> onSendRequest())
                 .setNegativeButton("Cancel", (dialog, which) -> dismiss())

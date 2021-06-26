@@ -23,18 +23,23 @@ import com.example.dogwalker.search.SearchUsersActivity;
 import com.example.dogwalker.viewprofile.ViewProfileActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class HomeActivity extends BackgroundAppCompatActivity implements NewWalkFragmentTracker {
 
     private User user;
+    private Button walkButton;
+    private String currentWalkKey;
     private boolean findDogWalkers;
     private Menu actionBarMenu;
     private ImageView profilePicture;
     private TextView displayName;
     private CheckBox activeOwnerBox;
     private CheckBox activeWalkerBox;
+    private DatabaseReference currentWalkReference;
+    private ValueEventListener currentWalkListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         setContentView(R.layout.activity_home);
         setSupportActionBar(findViewById(R.id.toolbar));
 
+        walkButton = findViewById(R.id.walk_button);
         profilePicture = findViewById(R.id.user_profile_picture);
         displayName = findViewById(R.id.user_display_name);
         activeOwnerBox = findViewById(R.id.looking_for_walkers);
@@ -86,7 +92,18 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-
+        currentWalkReference = currentUserReference.child("currentWalk");
+        currentWalkListener = currentWalkReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot != null && snapshot.getValue() != null) {
+                    currentWalkKey = snapshot.getValue().toString();
+                    if (currentWalkKey.equals("NONE")) walkButton.setText(getString(R.string.start_walk));
+                    else walkButton.setText(getString(R.string.go_to_walk));
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     @Override
@@ -187,7 +204,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         }
     }
 
-    public void startNewWalk(View view) {
+    private void startNewWalk() {
         if (user.isDogOwner() && user.isDogWalker()) {
             NewWalkFragment0.newInstance(R.layout.fragment_new_walk_0).show(getSupportFragmentManager(), "new_walk");
             return;
@@ -251,5 +268,12 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
                                 Toast.makeText(HomeActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (currentWalkReference != null && currentWalkListener != null)
+            currentWalkReference.removeEventListener(currentWalkListener);
     }
 }

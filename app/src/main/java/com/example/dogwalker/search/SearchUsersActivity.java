@@ -168,7 +168,6 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity implements 
 
     @Override
     public void onClickRequestWalk(String targetUserId, String targetUserName, boolean targetIsOwner, boolean targetIsWalker) {
-        // TODO: request walk on click
         if (targetIsOwner && !targetIsWalker) {
             currentUserReference.child("dogWalker").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -293,7 +292,7 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity implements 
                             public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                 if (snapshot1 != null && snapshot1.getValue() != null) {
                                     String selfUserName = snapshot1.getValue().toString();
-                                    database.getReference("Users/" + targetUserId + "notifications").runTransaction(new Transaction.Handler() {
+                                    database.getReference("Users/" + targetUserId + "/notifications").runTransaction(new Transaction.Handler() {
                                         @NonNull @Override
                                         public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                                             currentData.child(String.valueOf(walkRequestMessage.getTimestamp()))

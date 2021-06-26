@@ -2,28 +2,41 @@ package com.example.dogwalker.viewprofile;
 
 import com.example.dogwalker.BackgroundAppCompatActivity;
 import com.example.dogwalker.CircleTransform;
+import com.example.dogwalker.MessageNotification;
 import com.example.dogwalker.R;
+import com.example.dogwalker.User;
+import com.example.dogwalker.message.WalkRequestMessage;
+import com.example.dogwalker.messaging.MessageActivity;
+import com.example.dogwalker.search.SearchUsersActivity;
+import com.example.dogwalker.walkrequest.SelectWalkRoleFragment;
+import com.example.dogwalker.walkrequest.SendWalkRequestFragment;
+import com.example.dogwalker.walkrequest.SendWalkRequestTracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dogwalker.messaging.MessageActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class ViewProfileActivity extends BackgroundAppCompatActivity implements DogProfileCallback {
+import java.util.Map;
+import java.util.UUID;
+
+public class ViewProfileActivity extends BackgroundAppCompatActivity implements DogProfileCallback, SendWalkRequestTracker {
 
     private DogRecyclerAdapter dogRecyclerAdapter;
     private DatabaseReference userReference;
@@ -98,12 +111,7 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         dogRecyclerAdapter = new DogRecyclerAdapter(this, dogRecyclerView, getResources(), userId);
         dogRecyclerView.setAdapter(dogRecyclerAdapter);
 
-        findViewById(R.id.request_walk_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: request walk
-            }
-        });
+        findViewById(R.id.request_walk_button).setOnClickListener(v -> requestWalk());
 
         userReference = database.getReference("Users/" + userId);
         setProfileListeners();
@@ -243,6 +251,152 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
         intent.putExtra("user_id", userId);
         startActivity(intent);
         finish();
+    }
+
+    private void requestWalk() {
+        String targetUserId = userId;
+        String targetUserName = userName.getText().toString();
+        boolean targetIsOwner = userTypeOwner.getVisibility() == View.VISIBLE;
+        boolean targetIsWalker = userTypeWalker.getVisibility() == View.VISIBLE;
+        if (targetIsOwner && !targetIsWalker) {
+            currentUserReference.child("dogWalker").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot != null && snapshot.getValue() != null) {
+                        if (Boolean.parseBoolean(snapshot.getValue().toString())) {
+                            SendWalkRequestFragment.newInstance(R.layout.fragment_send_walk_request, targetIsWalker, targetUserId, targetUserName)
+                                    .show(getSupportFragmentManager(), "request_walk");
+                        }
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        } else if (targetIsWalker && !targetIsOwner) {
+            currentUserReference.child("dogOwner").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot != null && snapshot.getValue() != null) {
+                        if (Boolean.parseBoolean(snapshot.getValue().toString())) {
+                            SendWalkRequestFragment.newInstance(R.layout.fragment_send_walk_request, targetIsWalker, targetUserId, targetUserName)
+                                    .show(getSupportFragmentManager(), "request_walk");
+                        }
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        } else {
+            currentUserReference.child("dogOwner").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot != null && snapshot.getValue() != null) {
+                        final boolean selfIsOwner;
+                        if (Boolean.parseBoolean(snapshot.getValue().toString())) selfIsOwner = true;
+                        else selfIsOwner = false;
+                        currentUserReference.child("dogWalker").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot != null && snapshot.getValue() != null) {
+                                    boolean selfIsWalker = false;
+                                    if (Boolean.parseBoolean(snapshot.getValue().toString())) selfIsWalker = true;
+                                    if (selfIsOwner && selfIsWalker) {
+                                        SelectWalkRoleFragment.newInstance(R.layout.fragment_select_walk_role, targetUserId, targetUserName)
+                                                .show(getSupportFragmentManager(), "request_walk");
+                                    } else if (selfIsOwner || selfIsWalker) {
+                                        SendWalkRequestFragment.newInstance(R.layout.fragment_send_walk_request, selfIsOwner, targetUserId, targetUserName)
+                                                .show(getSupportFragmentManager(), "request_walk");
+                                    }
+                                }
+                            }
+                            @Override public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }
+    }
+
+    @Override
+    public void setIsTargetWalker(String targetUserId, String targetUserName, boolean isTargetWalker) {
+        SendWalkRequestFragment.newInstance(R.layout.fragment_send_walk_request, isTargetWalker, targetUserId, targetUserName)
+                .show(getSupportFragmentManager(), "request_walk");
+    }
+
+    @Override
+    public void setWalkRequest(String targetUserId, String targetUserName, boolean isTargetWalker, Map<String, String> dogs,
+                               long walkTime, float payment, String currency, String message) {
+        String selfUserId = currentUser.getUid();
+        WalkRequestMessage walkRequestMessage = new WalkRequestMessage(selfUserId, targetUserId, isTargetWalker, dogs, walkTime, payment, currency, message);
+        currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot != null) {
+                    if (snapshot.hasChild("contacts") && snapshot.child("contacts").hasChild(targetUserId)
+                            && snapshot.child("contacts").child(targetUserId).getValue() != null) {
+                        String chatUUID = snapshot.child("contacts").child(targetUserId).getValue().toString();
+                        sendMessage(selfUserId, targetUserId, walkRequestMessage, chatUUID);
+                    } else if (snapshot.hasChild("otherUsers") && snapshot.child("otherUsers").hasChild(targetUserId)
+                            && snapshot.child("otherUsers").child(targetUserId).getValue() != null) {
+                        String chatUUID = snapshot.child("otherUsers").child(targetUserId).getValue().toString();
+                        sendMessage(selfUserId, targetUserId, walkRequestMessage, chatUUID);
+                    } else { // Chat does not exist yet
+                        database.getReference("Users").runTransaction(new Transaction.Handler() {
+                            @NonNull @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                User selfUser = currentData.child(selfUserId).getValue(User.class);
+                                User targetUser = currentData.child(targetUserId).getValue(User.class);
+                                if (selfUser == null || targetUser == null)
+                                    return Transaction.success(currentData);
+                                if (selfUser.getContacts().containsKey(targetUserId) && targetUser.getContacts().containsKey(selfUserId)) { // target is a contact
+                                    String chatUUID = selfUser.getContacts().get(targetUserId);
+                                    sendMessage(selfUserId, targetUserId, walkRequestMessage, chatUUID);
+                                } else if (selfUser.getOtherUsers().containsKey(targetUserId) && targetUser.getOtherUsers().containsKey(selfUserId)) { // target has a chat
+                                    String chatUUID = selfUser.getOtherUsers().get(targetUserId);
+                                    sendMessage(selfUserId, targetUserId, walkRequestMessage, chatUUID);
+                                } else { // create a new chat
+                                    String newChatUUID = UUID.randomUUID().toString();
+                                    selfUser.getOtherUsers().put(targetUserId, newChatUUID);
+                                    targetUser.getOtherUsers().put(selfUserId, newChatUUID);
+                                    currentData.child(selfUserId).setValue(selfUser);
+                                    currentData.child(targetUserId).setValue(targetUser);
+                                    sendMessage(selfUserId, targetUserId, walkRequestMessage, newChatUUID);
+                                }
+                                return Transaction.success(currentData);
+                            }
+                            @Override public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) { }
+                        });
+                    }
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void sendMessage(String selfUserId, String targetUserId, WalkRequestMessage walkRequestMessage, String chatUUID) {
+        DatabaseReference newMessage = database.getReference("Chats/" + chatUUID).push();
+        String messageId = newMessage.getKey();
+        newMessage.setValue(walkRequestMessage)
+                .addOnSuccessListener(aVoid ->
+                        currentUserReference.child("profileName").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                if (snapshot1 != null && snapshot1.getValue() != null) {
+                                    String selfUserName = snapshot1.getValue().toString();
+                                    database.getReference("Users/" + targetUserId + "/notifications").runTransaction(new Transaction.Handler() {
+                                        @NonNull @Override
+                                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                            currentData.child(String.valueOf(walkRequestMessage.getTimestamp()))
+                                                    .setValue(new MessageNotification("walk_request", selfUserId, selfUserName, messageId));
+                                            return Transaction.success(currentData);
+                                        }
+                                        @Override public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) { }
+                                    });
+                                }
+                            }
+                            @Override public void onCancelled(@NonNull DatabaseError error) { }
+                        }))
+                .addOnFailureListener(e ->
+                        Toast.makeText(ViewProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override

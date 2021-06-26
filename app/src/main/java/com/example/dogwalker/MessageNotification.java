@@ -7,17 +7,17 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class MessageNotification {
 
-    private String messageType;
+    private String notificationType;
     private String userId;
     private String userName;
-    private String messageId;
+    private String referenceKey;
     private boolean viewed;
 
-    public MessageNotification(String messageType, String userId, String userName, String messageId) {
-        this.messageType = messageType;
+    public MessageNotification(String notificationType, String userId, String userName, String referenceKey) {
+        this.notificationType = notificationType;
         this.userId = userId;
         this.userName = userName;
-        this.messageId = messageId;
+        this.referenceKey = referenceKey;
         this.viewed = false;
     }
 }

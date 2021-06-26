@@ -100,7 +100,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
     <TextView
         android:text="@string/message"
         android:textStyle="bold"
@@ -112,6 +111,6 @@
         android:id="@+id/message"
         android:background="@drawable/text_input_layout_style"
         android:padding="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="100dp" />
 </LinearLayout>

@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,8 +33,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -46,9 +43,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +77,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
     protected ImageView notificationIcon;
     private List<String> notificationKeyList = new ArrayList<>();
     private Map<String, MessageNotification> notifications = new HashMap<>();
-    private Map<String, MessageNotification> unViewedNotifications = new HashMap<>();
+    private Map<String, MessageNotification> unviewedNotifications = new HashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -225,7 +220,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
                         notificationKeyList.add(0, notificationKey);
                         notifications.put(notificationKey, notification);
                         if (!notification.isViewed() && !notificationAlert.get()) {
-                            unViewedNotifications.put(notificationKey, notification);
+                            unviewedNotifications.put(notificationKey, notification);
                             notificationAlert.set(true);
                             notificationIcon.setImageResource(R.drawable.ic_notify_active);
                             new Thread(() -> {
@@ -243,15 +238,13 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
                 }
             }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
                     String notificationKey = snapshot.getKey();
-                    if (notifications.containsKey(notificationKey)) {
-                        unViewedNotifications.remove(notificationKey);
-                        notificationKeyList.remove(notificationKey);
-                        notifications.remove(notificationKey);
-                        if (notificationAlert.get() && unViewedNotifications.isEmpty()) {
+                    if (snapshot.hasChild("viewed") && snapshot.child("viewed").getValue() != null
+                            && Boolean.parseBoolean(snapshot.child("viewed").getValue().toString())) {
+                        unviewedNotifications.remove(notificationKey);
+                        if (notificationAlert.get() && unviewedNotifications.isEmpty()) {
                             notificationAlert.set(false);
                             notificationIcon.post(() -> notificationIcon.setImageResource(R.drawable.ic_notify_inactive));
                         }
@@ -259,7 +252,20 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
                 }
             }
 
-            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
+                    String notificationKey = snapshot.getKey();
+                    unviewedNotifications.remove(notificationKey);
+                    notificationKeyList.remove(notificationKey);
+                    notifications.remove(notificationKey);
+                    if (notificationAlert.get() && unviewedNotifications.isEmpty()) {
+                        notificationAlert.set(false);
+                        notificationIcon.post(() -> notificationIcon.setImageResource(R.drawable.ic_notify_inactive));
+                    }
+                }
+            }
+
             @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
         });
@@ -272,47 +278,54 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
             Menu menu = popup.getMenu();
             inflater.inflate(R.menu.menu_notifications, menu);
             for (int i = 0; i < notificationKeyList.size(); i++) {
-                MessageNotification notification = notifications.get(notificationKeyList.get(i));
-                if (notification.getMessageType().equals("message"))
+                String notificationKey = notificationKeyList.get(i);
+                MessageNotification notification = notifications.get(notificationKey);
+                currentUserReference.child("notifications/" + notificationKey + "/viewed").setValue(true)
+                        .addOnSuccessListener(aVoid -> { })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(BackgroundAppCompatActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                if (notification.getNotificationType().equals("message"))
                     menu.add(0, i, Menu.NONE, getString(R.string.message_notification) + " " + notification.getUserName());
-                else if (notification.getMessageType().equals("add_contact"))
+                else if (notification.getNotificationType().equals("add_contact"))
                     menu.add(0, i, Menu.NONE, getString(R.string.contact_notification) + " " + notification.getUserName());
-                else if (notification.getMessageType().equals("walk_request"))
+                else if (notification.getNotificationType().equals("walk_request"))
                     menu.add(0, i, Menu.NONE, getString(R.string.walk_request_notification) + " " + notification.getUserName());
+                else if (notification.getNotificationType().equals("walk_request_accept"))
+                    menu.add(0, i, Menu.NONE, notification.getUserName() + " " + getString(R.string.walk_request_accepted));
+                else if (notification.getNotificationType().equals("walk_request_decline"))
+                    menu.add(0, i, Menu.NONE, notification.getUserName() + " " + getString(R.string.walk_request_declined));
             }
 
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    String notificationKey = notificationKeyList.get(item.getItemId());
-                    MessageNotification notification = notifications.get(notificationKey);
-                    String userId = notification.getUserId();
+            popup.setOnMenuItemClickListener(item -> {
+                String notificationKey = notificationKeyList.get(item.getItemId());
+                MessageNotification notification = notifications.get(notificationKey);
+                String userId = notification.getUserId();
+                if (notification.getNotificationType().equals("message")) {
+                    currentUserReference.child("notifications/" + notificationKey).setValue(null)
+                            .addOnSuccessListener(aVoid -> {
+                                Intent intent = new Intent(BackgroundAppCompatActivity.this, MessageActivity.class);
+                                intent.putExtra("user_id", userId);
+                                startActivity(intent);
+                                if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(BackgroundAppCompatActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                } else if (notification.getNotificationType().equals("add_contact")) {
+                    // TODO
+                } else if (notification.getNotificationType().equals("walk_request")) {
                     Intent intent = new Intent(BackgroundAppCompatActivity.this, MessageActivity.class);
                     intent.putExtra("user_id", userId);
-                    if (notification.getMessageType().equals("message")) {
-                        currentUserReference.child("notifications/" + notificationKey).setValue(null)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        startActivity(intent);
-                                        if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(BackgroundAppCompatActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    } else if (notification.getMessageType().equals("add_contact")) {
-                        // TODO
-                    } else if (notification.getMessageType().equals("walk_request")) {
-                        intent.putExtra("show_request", notification.getMessageId());
-                        startActivity(intent);
-                        if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
-                    }
-                    return true;
+                    intent.putExtra("show_request", notificationKey);
+                    startActivity(intent);
+                    if (!(BackgroundAppCompatActivity.this instanceof HomeActivity)) finish();
+                } else if (notification.getNotificationType().equals("walk_request_accept")) {
+                    // TODO
+                } else if (notification.getNotificationType().equals("walk_request_decline")) {
+                    Intent intent = new Intent(BackgroundAppCompatActivity.this, MessageActivity.class);
+                    intent.putExtra("user_id", userId);
+                    startActivity(intent);
                 }
+                return true;
             });
             popup.show();
         });

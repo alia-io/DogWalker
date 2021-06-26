@@ -53,12 +53,16 @@
     <string name="message">Message:</string>
     <string name="compensation">Proposed Compensation:</string>
     <string name="which_dogs">Which dogs will be walked?</string>
-    <string name="select_walk_role_title_1">Will </string>
+    <string name="select_walk_role_title_1">Will</string>
     <string name="select_walk_role_title_2">or yourself be the dog walker?</string>
     <string name="select_walk_role_option_1"> will be walking my dogs.</string>
     <string name="select_walk_role_option_2_a">I will be walking</string>
     <string name="select_walk_role_option_2_b">\'s dogs.</string>
-d
+    <string name="dog_walker_colon">Dog Walker:</string>
+    <string name="dogs_to_walk">Dogs:</string>
+    <string name="request_time">When:</string>
+    <string name="request_payment">Payment:</string>
+
     <!--Dates-->
     <string name="day">day</string>
     <string name="month">month</string>
@@ -87,7 +91,9 @@ d
     <string name="send_button">Send</string>
     <string name="add_contact_button">Add Contact</string>
     <string name="send_message_button">Send Message</string>
-    <string name="request_walk">Walk Request with</string>
+    <string name="request_walk_for">Walk Request for</string>
+    <string name="request_walk_from">Walk Request from</string>
+    <string name="go_to_walk">View Current Walk</string>
 
     <!--EditText Hint Text-->
     <string name="email_hint">Email Address</string>
@@ -169,6 +175,8 @@ d
     <string name="message_notification">New Message from</string>
     <string name="contact_notification">Contact Request from</string>
     <string name="walk_request_notification">Walk Request from</string>
+    <string name="walk_request_accepted">Accepted Walk Request</string>
+    <string name="walk_request_declined">Declined Walk Request</string>
 
     <!--Art Credit-->
 
