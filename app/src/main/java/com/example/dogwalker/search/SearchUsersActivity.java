@@ -76,8 +76,8 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity implements 
     }
 
     @Override
-    protected void setGeoQuery(Location location) {
-        super.setGeoQuery(location);
+    protected void setGeoQuery(double latitude, double longitude) {
+        super.setGeoQuery(latitude, longitude);
         userRecyclerAdapter.setLocationListener();
     }
 
@@ -235,6 +235,7 @@ public class SearchUsersActivity extends BackgroundAppCompatActivity implements 
     @Override
     public void setWalkRequest(String targetUserId, String targetUserName, boolean isTargetWalker, Map<String, String> dogs,
                                long walkTime, float payment, String currency, String message) {
+        // TODO: prevent requesting walk with self or with others currently in a walk
         String selfUserId = currentUser.getUid();
         WalkRequestMessage walkRequestMessage = new WalkRequestMessage(selfUserId, targetUserId, isTargetWalker, dogs, walkTime, payment, currency, message);
         currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {

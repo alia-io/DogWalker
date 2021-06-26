@@ -74,10 +74,8 @@ public class SendWalkRequestFragment extends DialogFragment implements DatePicke
         super.onResume();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ownerDogsRef;
-        if (targetIsWalker)
-            ownerDogsRef = database.getReference("Users/" + targetUserId + "/dogs");
-        else
-            ownerDogsRef = FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/dogs");
+        if (targetIsWalker) ownerDogsRef = database.getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/dogs");
+        else ownerDogsRef = FirebaseDatabase.getInstance().getReference("Users/" + targetUserId + "/dogs");
         ownerDogsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

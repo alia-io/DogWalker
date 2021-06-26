@@ -37,8 +37,7 @@ public class User {
     private boolean dogWalkerActive = false;    // Currently looking for walks
     private String currentWalk = "NONE";        // Currently on a walk
 
-    private String latitude;
-    private String longitude;
+    private Map<String, String> location = new HashMap<>();         // latitude, longitude
     private Map<String, Object> notifications = new HashMap<>();
 
     public User(String profileName, String phoneNumber, String emailAddress) {

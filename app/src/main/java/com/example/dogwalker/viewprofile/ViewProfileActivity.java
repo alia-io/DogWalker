@@ -325,6 +325,7 @@ public class ViewProfileActivity extends BackgroundAppCompatActivity implements 
     @Override
     public void setWalkRequest(String targetUserId, String targetUserName, boolean isTargetWalker, Map<String, String> dogs,
                                long walkTime, float payment, String currency, String message) {
+        // TODO: prevent requesting walk with self or with others currently in a walk
         String selfUserId = currentUser.getUid();
         WalkRequestMessage walkRequestMessage = new WalkRequestMessage(selfUserId, targetUserId, isTargetWalker, dogs, walkTime, payment, currency, message);
         currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -22,7 +22,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
-        <activity android:name=".WalkActivity"
+        <activity android:name=".messaging.WalkActivity"
             android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".viewprofile.ViewProfileActivity"

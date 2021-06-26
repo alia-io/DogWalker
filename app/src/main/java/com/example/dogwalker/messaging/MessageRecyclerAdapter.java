@@ -5,6 +5,7 @@ import com.example.dogwalker.message.ChatMessage;
 import com.example.dogwalker.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,9 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
+                    Log.d("test", "snapshot has child = " + snapshot.hasChild("otherUsers"));
+                    Log.d("test", "other users has child = " + snapshot.child("otherUsers").hasChild(targetUserId));
+                    Log.d("test", "other users child not null = " + (snapshot.child("otherUsers").child(targetUserId).getValue() != null));
                     if (snapshot.hasChild("contacts") && snapshot.child("contacts").hasChild(targetUserId)
                             && snapshot.child("contacts").child(targetUserId).getValue() != null) {
                         String chatUUID = snapshot.child("contacts").child(targetUserId).getValue().toString();

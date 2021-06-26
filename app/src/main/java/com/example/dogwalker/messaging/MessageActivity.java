@@ -91,19 +91,22 @@ public class MessageActivity extends BackgroundAppCompatActivity implements Rece
                     if (snapshot != null && snapshot.getValue() != null) {
                         currentNotification = snapshot.getValue(MessageNotification.class);
                         if (currentNotification != null) {
-                            String senderName = currentNotification.getUserName();
+                            String targetUserName = currentNotification.getUserName();
                             String messageId = currentNotification.getReferenceKey();
                             if (currentNotification.getNotificationType().equals("walk_request")) {
                                 currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if (snapshot != null && snapshot.getValue() != null) {
-                                            if (snapshot.hasChild("contacts") && snapshot.child("contacts").hasChild(targetUserId)) {
-                                                String chatId = snapshot.child("contacts").child(targetUserId).getValue().toString();
-                                                setWalkRequestMessagePopup(senderName, chatId, messageId);
-                                            } else if (snapshot.hasChild("otherUsers") && snapshot.child("otherUsers").hasChild(targetUserId)) {
-                                                String chatId = snapshot.child("otherUsers").child(targetUserId).getValue().toString();
-                                                setWalkRequestMessagePopup(senderName, chatId, messageId);
+                                            if (snapshot.hasChild("profileName") && snapshot.child("profileName").getValue() != null) {
+                                                String selfUserName = snapshot.child("profileName").getValue().toString();
+                                                if (snapshot.hasChild("contacts") && snapshot.child("contacts").hasChild(targetUserId)) {
+                                                    String chatId = snapshot.child("contacts").child(targetUserId).getValue().toString();
+                                                    setWalkRequestMessagePopup(selfUserName, targetUserName, chatId, messageId);
+                                                } else if (snapshot.hasChild("otherUsers") && snapshot.child("otherUsers").hasChild(targetUserId)) {
+                                                    String chatId = snapshot.child("otherUsers").child(targetUserId).getValue().toString();
+                                                    setWalkRequestMessagePopup(selfUserName, targetUserName, chatId, messageId);
+                                                }
                                             }
                                         }
                                     }
@@ -118,13 +121,16 @@ public class MessageActivity extends BackgroundAppCompatActivity implements Rece
         }
     }
 
-    private void setWalkRequestMessagePopup(String senderName, String chatId, String messageId) {
+    private void setWalkRequestMessagePopup(String selfUserName, String targetUserName, String chatId, String messageId) {
         database.getReference("Chats/" + chatId + "/" + messageId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null && snapshot.getValue() != null) {
                     WalkRequestMessage walkRequestMessage = snapshot.getValue(WalkRequestMessage.class);
                     if (walkRequestMessage != null) {
+                        String walkerName;
+                        if (walkRequestMessage.getWalker().equals(currentUser.getUid())) walkerName = selfUserName;
+                        else walkerName = targetUserName;
                         StringBuilder dogs = new StringBuilder();
                         for (String dogName : walkRequestMessage.getDogs().values()) {
                             if (dogs.length() != 0) dogs.append(", ");
@@ -132,8 +138,8 @@ public class MessageActivity extends BackgroundAppCompatActivity implements Rece
                         }
                         String message = walkRequestMessage.getMessage();
                         if (message == null) message = "";
-                        ReceiveWalkRequestFragment.newInstance(R.layout.fragment_receive_walk_request, currentNotificationKey, senderName,
-                                walkRequestMessage.getWalker(), dogs.toString(), localDateFormat.format(new Date(walkRequestMessage.getWalkTime())),
+                        ReceiveWalkRequestFragment.newInstance(R.layout.fragment_receive_walk_request, currentNotificationKey, targetUserName,
+                                walkerName, dogs.toString(), localDateFormat.format(new Date(walkRequestMessage.getWalkTime())),
                                 walkRequestMessage.getCurrency() + walkRequestMessage.getPaymentAmount(), message)
                                 .show(getSupportFragmentManager(), "walk_request");
                     }
@@ -147,9 +153,7 @@ public class MessageActivity extends BackgroundAppCompatActivity implements Rece
     protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
 
     @Override
-    protected boolean isTargetChatOpen(String userId) {
-        return this.targetUserId.equals(userId);
-    }
+    protected boolean isTargetChatOpen(String userId) { return this.targetUserId.equals(userId); }
 
     public void send(View view) {
         String messageText = newMessageText.getText().toString();

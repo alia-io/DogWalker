@@ -1,6 +1,7 @@
 package com.example.dogwalker;
 
 import com.example.dogwalker.editdogs.EditDogsActivity;
+import com.example.dogwalker.messaging.WalkActivity;
 import com.example.dogwalker.newwalk.NewWalkFragment0;
 import com.example.dogwalker.newwalk.NewWalkFragment1;
 import com.example.dogwalker.newwalk.NewWalkFragmentTracker;
@@ -62,9 +63,8 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = snapshot.getValue(User.class);
                 displayName.setText(user.getProfileName());
-                if (user.getProfilePicture() != null) {
+                if (user.getProfilePicture() != null)
                     Picasso.get().load(user.getProfilePicture()).transform(new CircleTransform()).into(profilePicture);
-                }
                 if (actionBarMenu != null) {
                     if (user.isDogOwner()) {
                         actionBarMenu.findItem(R.id.action_edit_dogs).setVisible(true);
@@ -98,8 +98,14 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null && snapshot.getValue() != null) {
                     currentWalkKey = snapshot.getValue().toString();
-                    if (currentWalkKey.equals("NONE")) walkButton.setText(getString(R.string.start_walk));
-                    else walkButton.setText(getString(R.string.go_to_walk));
+                    if (currentWalkKey.equals("NONE")) {
+                        walkButton.setText(getString(R.string.start_walk));
+                        walkButton.setOnClickListener(v -> startNewWalk());
+                    }
+                    else {
+                        walkButton.setText(getString(R.string.go_to_walk));
+                        walkButton.setOnClickListener(v -> goToCurrentWalk());
+                    }
                 }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) { }
@@ -166,9 +172,6 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
         Intent intent;
 
         switch (item.getItemId()) {
-                //Toolbar toolbar = findViewById(R.id.toolbar);
-                //View notificationIcon = toolbar.findViewById(R.id.action_notification);
-                //notificationIcon.animate().setDuration(1000).alpha(0F);
             case viewProfileId:
                 intent = new Intent(this, ViewProfileActivity.class);
                 intent.putExtra("user_id", currentUser.getUid());
@@ -210,6 +213,10 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
             return;
         } else findDogWalkers = user.isDogOwner();
         NewWalkFragment1.newInstance(R.layout.fragment_new_walk_1, findDogWalkers).show(getSupportFragmentManager(), "new_walk");
+    }
+
+    private void goToCurrentWalk() {
+        startActivity(new Intent(this, WalkActivity.class));
     }
 
     @Override

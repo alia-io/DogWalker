@@ -95,8 +95,8 @@ public class ReceiveWalkRequestFragment extends DialogFragment {
         return builder.setView(view)
                 .setTitle(getActivity().getResources().getString(R.string.request_walk_from) + " " + senderName)
                 .setIcon(R.drawable.dog_walker)
-                .setPositiveButton("Accept Request", (dialog, which) -> listener.acceptWalkRequest(notificationKey))
-                .setNegativeButton("Decline Request", (dialog, which) -> listener.declineWalkRequest(notificationKey))
+                .setPositiveButton("Accept", (dialog, which) -> listener.acceptWalkRequest(notificationKey))
+                .setNegativeButton("Decline", (dialog, which) -> listener.declineWalkRequest(notificationKey))
                 .setNeutralButton("Close", (dialog, which) -> dismiss())
                 .create();
     }

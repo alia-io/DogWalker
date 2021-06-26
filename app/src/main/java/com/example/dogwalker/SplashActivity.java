@@ -1,6 +1,7 @@
 package com.example.dogwalker;
 
 import com.example.dogwalker.auth.SignUpLoginActivity;
+import com.example.dogwalker.messaging.WalkActivity;
 import com.example.dogwalker.setupprofile.SetUpProfileActivity;
 
 import androidx.annotation.NonNull;
@@ -82,12 +83,9 @@ public class SplashActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 assert user != null;
-                if (user.isDogOwner() || user.isDogWalker() || getIntent().getBooleanExtra("setup_complete", false)) { // Profile setup not needed
-                    if (!user.getCurrentWalk().equals("NONE")) // User has a currently active walk
-                        startActivity(new Intent(SplashActivity.this, WalkActivity.class));
-                    else // User does not have a currently active walk
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                } else // Profile setup needed
+                if (user.isDogOwner() || user.isDogWalker() || getIntent().getBooleanExtra("setup_complete", false)) // Profile setup not needed
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                else // Profile setup needed
                     startActivity(new Intent(SplashActivity.this, SetUpProfileActivity.class));
                 if (finishActivity) finish();
             }

@@ -68,7 +68,7 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
     private GeoFire geoFire;
     protected GeoQuery geoQuery;
 
-    private FusedLocationProviderClient fusedLocationClient;    // GMS reference
+    protected FusedLocationProviderClient fusedLocationClient;  // GMS reference
     private LocationRequest locationRequest;                    // Get location
     private LocationCallback locationCallback;                  // Get notified when location changes
 
@@ -155,14 +155,9 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
         double latitude = lastLocation.getLatitude();
         double longitude = lastLocation.getLongitude();
 
-        if (geoQuery != null)
-            geoQuery.setCenter(new GeoLocation(latitude, longitude));
-        else {
-            geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude, longitude), QUERY_RADIUS);
-            setGeoQuery(lastLocation);
-        }
+        setGeoQuery(latitude, longitude);
 
-        currentUserReference.runTransaction(new Transaction.Handler() {
+        currentUserReference.child("location").runTransaction(new Transaction.Handler() {
             @NonNull @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 currentData.child("latitude").setValue(String.valueOf(latitude));
@@ -179,8 +174,9 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
         });
     }
 
-    protected void setGeoQuery(Location lastLocation) {
-        geoQuery = geoFire.queryAtLocation(new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()), QUERY_RADIUS);
+    protected void setGeoQuery(double latitude, double longitude) {
+        if (geoQuery != null) geoQuery.setCenter(new GeoLocation(latitude, longitude));
+        else geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude, longitude), QUERY_RADIUS);
     }
 
     private void setUpUserNotifications() {
@@ -216,23 +212,27 @@ public abstract class BackgroundAppCompatActivity extends AppCompatActivity {
                 if (snapshot != null && snapshot.getKey() != null && snapshot.getValue() != null) {
                     String notificationKey = snapshot.getKey();
                     MessageNotification notification = snapshot.getValue(MessageNotification.class);
-                    if (!isTargetChatOpen(notification.getUserId()) && !notifications.containsKey(notificationKey)) {
+                    if (!notifications.containsKey(notificationKey) && (!isTargetChatOpen(notification.getUserId())
+                            || !notification.getNotificationType().equals("message") || !notification.getNotificationType().equals("walk_request"))) {
                         notificationKeyList.add(0, notificationKey);
                         notifications.put(notificationKey, notification);
-                        if (!notification.isViewed() && !notificationAlert.get()) {
+                        if ((!isTargetChatOpen(notification.getUserId()) || (!notification.getNotificationType().equals("message")
+                                && !notification.getNotificationType().equals("walk_request"))) && !notification.isViewed()) {
                             unviewedNotifications.put(notificationKey, notification);
-                            notificationAlert.set(true);
-                            notificationIcon.setImageResource(R.drawable.ic_notify_active);
-                            new Thread(() -> {
-                                while(notificationAlert.get()) {
-                                    notificationIcon.post(ringer::start);
-                                    try {
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e) {
-                                        Log.d("NotificationAlert", "Sleep Failure");
+                            if (!notificationAlert.get()) {
+                                notificationAlert.set(true);
+                                notificationIcon.setImageResource(R.drawable.ic_notify_active);
+                                new Thread(() -> {
+                                    while(notificationAlert.get()) {
+                                        notificationIcon.post(ringer::start);
+                                        try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            Log.d("NotificationAlert", "Sleep Failure");
+                                        }
                                     }
-                                }
-                            }).start();
+                                }).start();
+                            }
                         }
                     }
                 }
