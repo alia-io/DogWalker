@@ -144,9 +144,7 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
     }
 
     private void getDogFromDatabase() {
-        DatabaseReference dogReference = database.getReference("Dogs/" + dogKey);
-
-        dogReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference("Dogs/" + dogKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 dog = snapshot.getValue(Dog.class);
@@ -156,10 +154,8 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
                     if (dog.getBreed() != null) dogBreed.setText(dog.getBreed());
                     if (dog.getProfileAboutMe() != null) aboutDog.setText(dog.getProfileAboutMe());
 
-                    if (dog.getProfilePicture() != null) {
-                        profilePicture.setBackground(null);
+                    if (dog.getProfilePicture() != null)
                         Picasso.get().load(dog.getProfilePicture()).transform(new CircleTransform()).into(profilePicture);
-                    }
 
                     if (dog.getBirthDate() != null) {
                         Calendar calendar = Calendar.getInstance();
@@ -220,12 +216,10 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
     }
 
     private void displayProfilePicturePopupMenu(View v) {
-
         PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
         MenuInflater menuInflater = popupMenu.getMenuInflater();
         menuInflater.inflate(R.menu.menu_picture_popup, popupMenu.getMenu());
         popupMenu.show();
-
         popupMenu.setOnMenuItemClickListener(item -> {
             final int takePicture = R.id.action_take_picture;
             final int uploadPicture = R.id.action_upload_picture;
@@ -270,7 +264,6 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
 
     public void setProfilePicturePreview(Uri imageUri) {
         profilePictureUri = imageUri;
-        profilePicture.setBackground(null);
         Picasso.get().load(profilePictureUri.toString()).transform(new CircleTransform()).into(profilePicture);
     }
 
@@ -311,8 +304,8 @@ public class EditDogFragment extends DialogFragment implements DatePickerDialog.
         dog.setName(dogName.getText().toString());
         dog.setOwner(currentUser.getUid());
 
-        if (breed != null && !breed.equals("")) dog.setBreed(breed);
-        if (about != null && !about.equals("")) dog.setProfileAboutMe(about);
+        if (breed != null) dog.setBreed(breed);
+        if (about != null) dog.setProfileAboutMe(about);
         if (birthDate != null) dog.setBirthDate(birthDate);
 
         if (profilePictureUri != null) {

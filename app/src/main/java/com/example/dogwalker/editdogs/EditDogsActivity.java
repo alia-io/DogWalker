@@ -56,10 +56,7 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        recyclerAdapter.removeListener();
-    }
+    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
 
     public void addDog(View view) { startEditDogFragment("", "add_dog"); }
 
@@ -96,9 +93,6 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
         } else
             Toast.makeText(this, "We need permission to access your camera and photos", Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    protected void setNotificationIcon() { notificationIcon = findViewById(R.id.action_notification); }
 
     private void takePhoto() {
         ContentValues values = new ContentValues();
@@ -160,11 +154,16 @@ public class EditDogsActivity extends BackgroundAppCompatActivity implements Edi
     }
 
     private void updateDogInDatabase(String dogKey, Dog dog) {
-        DatabaseReference dogRef = database.getReference("Dogs/" + dogKey);
-        dogRef.setValue(dog)
+        database.getReference("Dogs/" + dogKey).setValue(dog)
                 .addOnSuccessListener(aVoid ->
                         Toast.makeText(EditDogsActivity.this, "Your dog's profile was updated!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e ->
                         Toast.makeText(EditDogsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recyclerAdapter.removeListener();
     }
 }

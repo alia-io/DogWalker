@@ -24,6 +24,7 @@
     <string name="set_up_instruction_2">Upload a profile picture. Other users will be more likely to trust and interact with you!</string>
     <string name="set_up_instruction_3">Tell other users a little about yourself.</string>
     <string name="edit_dogs_title">My Dogs</string>
+    <string name="edit_profile_title">Edit Profile</string>
     <string name="no_answer">N/A</string>
     <string name="training_level">Level of Training:</string>
     <string name="health_and_needs">Relevant health information &amp; other needs:</string>
@@ -86,6 +87,7 @@
     <string name="add_dog">Add Dog</string>
     <string name="save_dogs">Save Dogs</string>
     <string name="save_dog">Save Dog</string>
+    <string name="save_user">Save Profile</string>
     <string name="verify_email_button">Send Verification Email</string>
     <string name="reset_password_button">Send Password Reset Email</string>
     <string name="send_button">Send</string>

@@ -181,7 +181,7 @@ public class HomeActivity extends BackgroundAppCompatActivity implements NewWalk
                 // TODO
                 return true;
             case editProfileId:
-                // TODO
+                startActivity(new Intent(this, EditProfileActivity.class));
                 return true;
             case editDogsId:
                 startActivity(new Intent(this, EditDogsActivity.class));
